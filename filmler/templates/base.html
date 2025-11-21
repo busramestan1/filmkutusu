@@ -171,6 +171,23 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'hakkinda' %}">Hakkında</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'en_iyiler' %}">TOP 10 Listesi</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'iletisim' %}">İletişim</a></li>
+                    <li class="nav-item d-lg-none mt-3 border-top border-secondary pt-3">
+                        {% if user.is_authenticated %}
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'profil' %}" class="btn btn-outline-light">
+                                👤 Profilim ({{ user.username }})
+                            </a>
+                            <a href="{% url 'cikis_yap' %}" class="btn btn-danger">
+                                🚪 Çıkış Yap
+                            </a>
+                        </div>
+                        {% else %}
+                        <a href="{% url 'giris_yap' %}" class="btn btn-danger w-100 fw-bold">
+                            Giriş Yap / Kayıt Ol
+                        </a>
+                        {% endif %}
+                    </li>
+
                 </ul>
             </div>
 

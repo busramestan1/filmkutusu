@@ -28,9 +28,8 @@
                                 style="letter-spacing: -2px; text-shadow: 2px 2px 10px #000;">
                                 {{ film.isim }}
                             </h1>
-                            <p class="lead mt-3 text-light opacity-75 d-none d-md-block" style="max-width: 90%;">
-                                {{ film.konu|truncatewords:20 }}
-                            </p>
+                            <p class="lead mt-3 text-light opacity-75" style="max-width: 90%; font-size: 1rem;">
+                                {{ film.konu|truncatewords:15 }} </p>
 
                             <div class="mt-4 text-end pe-md-5">
                                 <a href="{% url 'detay' film.id %}"
@@ -40,10 +39,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 text-center d-none d-md-block">
+                        <div class="col-md-4 text-center mt-3 mt-md-0">
                             <img src="{{ film.resim }}" alt="{{ film.isim }}" loading="lazy"
                                 class="img-fluid border border-3 border-danger shadow-red"
-                                style="max-height: 300px; object-fit: cover; transform: rotate(3deg);">
+                                style="max-height: 200px; object-fit: cover; transform: rotate(3deg);">
                         </div>
 
                     </div>
