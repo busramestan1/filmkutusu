@@ -1,0 +1,390 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilmKutusu</title>
+    <link rel="icon" href="{% static 'logo.png' %}" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* --- GENEL AYARLAR --- */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Footer'ı en alta itmek için */
+        }
+
+        /* --- RENKLER --- */
+        .text-red {
+            color: #D80000;
+        }
+
+        .bg-red {
+            background-color: #D80000;
+        }
+
+        /* --- NAVBAR (MENÜ) --- */
+        /* sticky-top sınıfı ile menü yukarı yapışacak */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+            /* Hafif şeffaf siyah */
+            backdrop-filter: blur(10px);
+            /* Arkası buzlu cam gibi görünsün */
+        }
+
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+            transition: 0.3s;
+            margin: 0 10px;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: #D80000 !important;
+        }
+
+        .btn-login {
+            background-color: #D80000;
+            color: white;
+            border-radius: 0;
+            padding: 5px 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #b30000;
+            color: white;
+        }
+
+        /* --- DİĞER STİLLER --- */
+        .kategori-item {
+            background-color: #fff;
+            color: #000;
+            padding: 12px;
+            display: block;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            border-left: 5px solid transparent;
+        }
+
+        .kategori-item:hover {
+            background-color: #1a1a1a;
+            color: #D80000;
+            border-left: 5px solid #D80000;
+        }
+
+        .film-card-box {
+            background-color: #fff;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .film-card-box:hover {
+            transform: translateY(-5px);
+            /* Hafif yukarı kalkma efekti */
+            box-shadow: 0 10px 20px rgba(216, 0, 0, 0.2);
+            background-color: #D80000;
+        }
+
+        .film-card-box:hover .text-muted,
+        .film-card-box:hover a,
+        .film-card-box:hover .card-title {
+            color: #fff !important;
+        }
+
+        /* --- YUKARI ÇIK BUTONU --- */
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            /* Başlangıçta gizli */
+            background-color: #D80000;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            z-index: 999;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(216, 0, 0, 0.5);
+        }
+
+        #btn-back-to-top:hover {
+            background-color: #fff;
+            color: #D80000;
+        }
+
+        /* Slider Resmine Kırmızı Gölge */
+        .shadow-red {
+            box-shadow: 0 0 20px 5px rgba(220, 53, 69, 0.7);
+            /* Kırmızı tonlarında bir gölge */
+        }
+
+        /* Hover efekti (İzleme listesindeki filmler için) */
+        .group-hover:hover img {
+            transform: scale(1.05);
+            /* Resmi büyüt */
+            border-color: #dc3545 !important;
+            /* Kırmızı border yap */
+        }
+
+        .group-hover .badge {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .group-hover:hover .badge {
+            opacity: 1;
+            /* x butonu her zaman görünür kalsın veya hover'da çıksın */
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top border-bottom border-danger border-opacity-50">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{% static 'logo.png' %}" alt="FILMKUTUSU Logo" width="40" height="40"
+                    class="d-inline-block align-text-top me-2">
+                <span class="fw-bold text-danger fs-3" style="letter-spacing: 1px; font-family: Impact, sans-serif;">
+                    FILMKUTUSU
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'anasayfa' %}">Anasayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'hakkinda' %}">Hakkında</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'en_iyiler' %}">TOP 10 Listesi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'iletisim' %}">İletişim</a></li>
+                </ul>
+            </div>
+
+            <div class="d-none d-lg-block">
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle border-0" type="button"
+                        data-bs-toggle="dropdown">
+                        👤 {{ user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+
+                        {% if user.is_superuser %}
+                        <li>
+                            <a class="dropdown-item text-warning fw-bold" href="/admin" target="_blank">
+                                ⚙️ Yönetim Paneli
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider bg-secondary">
+                        </li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="{% url 'profil' %}">🏆 Profilim & Puanım</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'cikis_yap' %}">🚪 Çıkış Yap</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="{% url 'giris_yap' %}" class="btn btn-login">Giriş / Kayıt</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 flex-grow-1">
+
+        {% if messages %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm border-0" role="alert">
+                    {% if message.tags == 'success' %}✅
+                    {% elif message.tags == 'warning' %}⚠️
+                    {% elif message.tags == 'error' %}⛔
+                    {% else %}ℹ️{% endif %}
+
+                    <span class="fw-bold ms-2">{{ message }}</span>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer class="bg-black text-white pt-5 pb-4 mt-5 border-top border-danger border-3">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-4 mb-4">
+                    <a href="/" class="d-flex align-items-center text-decoration-none mb-3">
+                        <img src="{% static 'logo.png' %}" alt="Logo" width="40" height="40" class="me-2">
+                        <span class="fw-bold text-danger fs-3"
+                            style="font-family: 'Impact', sans-serif; letter-spacing: 1px;">FILMKUTUSU</span>
+                    </a>
+                    <p class="text-secondary small" style="line-height: 1.6;">
+                        Türkiye'nin en kapsamlı ve modern film inceleme platformu.
+                        Sinema dünyasındaki son gelişmeleri, vizyondaki filmleri ve
+                        unutulmaz klasikleri sizin için derliyoruz.
+                    </p>
+                    <div class="mt-3">
+                        <a href="https://www.instagram.com" target="_blank"
+                            class="text-white me-3 text-decoration-none hover-red">
+                            <i class="bi bi-instagram"></i> Instagram
+                        </a>
+                        <a href="https://twitter.com" target="_blank"
+                            class="text-white me-3 text-decoration-none hover-red">
+                            <i class="bi bi-twitter"></i> Twitter
+                        </a>
+                        <a href="https://www.youtube.com" target="_blank"
+                            class="text-white text-decoration-none hover-red">
+                            <i class="bi bi-youtube"></i> Youtube
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-6 mb-4">
+                    <h5 class="text-uppercase fw-bold text-danger mb-3" style="font-size: 0.9rem;">Keşfet</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'anasayfa' %}"
+                                class="text-secondary text-decoration-none hover-white">Ana Sayfa</a></li>
+                        <li class="mb-2"><a href="{% url 'en_iyiler' %}"
+                                class="text-secondary text-decoration-none hover-white">Top 10 Listesi</a></li>
+                        <li class="mb-2"><a href="{% url 'anasayfa' %}?tur=Aksiyon"
+                                class="text-secondary text-decoration-none hover-white">Aksiyon Filmleri</a></li>
+                        <li class="mb-2"><a href="{% url 'anasayfa' %}?tur=Komedi"
+                                class="text-secondary text-decoration-none hover-white">Komedi Filmleri</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-2 col-6 mb-4">
+                    <h5 class="text-uppercase fw-bold text-danger mb-3" style="font-size: 0.9rem;">Kurumsal</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'hakkinda' %}"
+                                class="text-secondary text-decoration-none hover-white">Hakkımızda</a></li>
+                        <li class="mb-2"><a href="{% url 'iletisim' %}"
+                                class="text-secondary text-decoration-none hover-white">İletişim</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white"
+                                onclick="alert('Bu sayfa yapım aşamasında.')">Gizlilik Politikası</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white"
+                                onclick="alert('Bu sayfa yapım aşamasında.')">Kullanım Şartları</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-uppercase fw-bold text-danger mb-3" style="font-size: 0.9rem;">Bültenimize Katılın
+                    </h5>
+                    <p class="text-secondary small">Haftalık film önerileri için abone olun.</p>
+
+                    <div class="input-group mb-3">
+                        <input type="email" id="newsletter-email"
+                            class="form-control bg-dark text-white border-secondary" placeholder="Email adresiniz..."
+                            aria-label="Email">
+                        <button class="btn btn-danger fw-bold" type="button" onclick="aboneOl()">ABONE OL</button>
+                    </div>
+                    <small id="newsletter-msg" class="text-success fw-bold d-none">Başarıyla abone olundu! 🎉</small>
+                </div>
+
+            </div>
+
+            <hr class="border-secondary my-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start text-secondary small">
+                    &copy; 2025 <strong>FilmKutusu</strong>. Tüm hakları saklıdır.
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png"
+                        alt="Payment" height="20" style="opacity: 0.5; filter: grayscale(100%);">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function aboneOl() {
+            const emailInput = document.getElementById('newsletter-email');
+            const msgBox = document.getElementById('newsletter-msg');
+
+            if (emailInput.value.trim() === "") {
+                // Kutu boşsa
+                alert("Lütfen geçerli bir mail adresi giriniz! ⚠️");
+            } else {
+                // Doluysa
+                emailInput.value = ""; // Kutuyu temizle
+                msgBox.classList.remove('d-none'); // Başarı mesajını göster
+
+                // 3 saniye sonra mesajı gizle
+                setTimeout(() => {
+                    msgBox.classList.add('d-none');
+                }, 3000);
+            }
+        }
+    </script>
+
+    <style>
+        .hover-white:hover {
+            color: #ffffff !important;
+            transition: 0.3s;
+            transform: translateX(5px);
+            display: inline-block;
+        }
+
+        .hover-red:hover {
+            color: #D80000 !important;
+            transition: 0.3s;
+        }
+    </style>
+
+    <button type="button" id="btn-back-to-top">
+        ↑
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let mybutton = document.getElementById("btn-back-to-top");
+
+        // Sayfa 20px aşağı inince butonu göster
+        window.onscroll = function () {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // Butona basınca en tepeye çık
+        mybutton.addEventListener("click", backToTop);
+
+        function backToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+</body>
+
+</html>

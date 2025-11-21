@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <span class="badge bg-danger px-3 py-2 mb-3">VİZYONUMUZ</span>
+        <h1 class="display-3 fw-bold text-white">Sinemanın Dijital Kalbi</h1>
+        <p class="lead text-secondary w-75 mx-auto">
+            FilmKutusu, sıradan bir veritabanı değil; algoritmalarla güçlendirilmiş,
+            tutkuyla kodlanmış yeni nesil bir film keşif aracıdır.
+        </p>
+    </div>
+
+    <div class="row text-center g-4 mb-5">
+        <div class="col-md-4">
+            <div class="p-4 border border-secondary rounded bg-black h-100">
+                <h2 class="display-4 fw-bold text-danger mb-0">{{ film_sayisi }}+</h2>
+                <p class="text-secondary text-uppercase ls-1">Aktif Film</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 border border-secondary rounded bg-black h-100">
+                <h2 class="display-4 fw-bold text-white mb-0">{{ yorum_sayisi }}+</h2>
+                <p class="text-secondary text-uppercase ls-1">İzleyici Yorumu</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 border border-secondary rounded bg-black h-100">
+                <h2 class="display-4 fw-bold text-warning mb-0">7/24</h2>
+                <p class="text-secondary text-uppercase ls-1">Canlı Veri Akışı</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="border-secondary my-5">
+
+    <div class="row align-items-center mb-5">
+        <div class="col-md-5">
+            <h3 class="text-white fw-bold mb-3">Gücümüzü Nereden Alıyoruz?</h3>
+            <p class="text-light opacity-75">
+                Bu proje, dünyanın en popüler web çatısı <strong>Django</strong> kullanılarak geliştirildi.
+                Verilerimiz, global film otoritesi <strong>TMDB API</strong> üzerinden anlık olarak çekilmekte
+                ve yapay zeka algoritmalarıyla filtrelenmektedir.
+            </p>
+            <ul class="list-unstyled text-secondary mt-3">
+                <li class="mb-2">✅ Python & Django Backend</li>
+                <li class="mb-2">✅ Bootstrap 5 Modern Arayüz</li>
+                <li class="mb-2">✅ SQLite Hızlı Veritabanı</li>
+            </ul>
+        </div>
+        <div class="col-md-7">
+            <div class="bg-dark p-4 rounded shadow-lg border border-secondary font-monospace text-success">
+                <p class="mb-1"><span class="text-primary">class</span> <span class="text-warning">FilmKutusu</span>:
+                </p>
+                <p class="mb-1 ps-4">def __init__(self):</p>
+                <p class="mb-1 ps-5">self.mission = "En İyi Filmleri Bul"</p>
+                <p class="mb-1 ps-5">self.tech = ["Python", "Django", "AI"]</p>
+                <p class="mb-1 ps-4">def get_movies(self):</p>
+                <p class="mb-0 ps-5">return <span class="text-danger">"Sınırsız Eğlence"</span></p>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center text-danger fw-bold mb-4">Merak Edilenler</h3>
+    <div class="accordion accordion-flush border border-secondary rounded" id="faqAccordion">
+
+        <div class="accordion-item bg-black text-white">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-dark text-white shadow-none" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faq1">
+                    Bu siteyi kim yaptı?
+                </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body opacity-75">
+                    Bu proje, Django framework'ünü öğrenmek ve geliştirmek amacıyla tutkulu geliştiriciler tarafından
+                    kodlanmıştır.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item bg-black text-white">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-dark text-white shadow-none" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faq2">
+                    Filmleri izleyebilir miyim?
+                </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body opacity-75">
+                    Hayır, FilmKutusu bir inceleme, puanlama ve keşif platformudur. Telif hakları nedeniyle film izleme
+                    hizmeti sunmamaktayız.
+                </div>
+            </div>
+
+            <div class="accordion-item bg-black text-white">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-dark text-white shadow-none" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Üyelik ücretli mi?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body opacity-75">
+                        Hayır! FilmKutusu'na üye olmak, yorum yapmak, puan kazanmak ve listeler oluşturmak tamamen
+                        <strong>ücretsizdir</strong> ve hep öyle kalacaktır.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item bg-black text-white">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-dark text-white shadow-none" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#faq4">
+                        Puanlama sistemi nasıl çalışıyor?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body opacity-75">
+                        Sitedeki film puanları, hem global TMDB verilerini hem de siz değerli üyelerimizin verdiği
+                        oyları
+                        harmanlayarak oluşturulur. Üye puanı (XP) ise yaptığınız yorum ve aktivitelerle artar.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item bg-black text-white">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-dark text-white shadow-none" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#faq5">
+                        Aradığım filmi bulamıyorum, ne yapmalıyım?
+                    </button>
+                </h2>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body opacity-75">
+                        Veritabanımız her gün otomatik güncellenir. Eğer aradığınız film yoksa, <a href="/iletisim"
+                            class="text-danger fw-bold">İletişim</a> sayfasından bize yazabilirsiniz; editörlerimiz
+                        hemen
+                        ekleyecektir.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    {% endblock %}

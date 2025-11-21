@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark border border-danger shadow-lg text-center p-4">
+
+                <div class="position-relative d-inline-block mb-3">
+                    <img src="{{ profil.avatar }}" class="rounded-circle border border-3 border-white" width="120"
+                        height="120" style="object-fit: cover;">
+
+                    <button class="btn btn-sm btn-danger position-absolute bottom-0 end-0 rounded-circle shadow"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#avatarForm">
+                        ✏️
+                    </button>
+                </div>
+
+                <div class="collapse mb-3" id="avatarForm">
+                    <div class="card card-body bg-black p-2 border border-secondary">
+                        <small class="text-secondary d-block mb-2" style="font-size: 0.7rem;">Resim linkini
+                            yapıştır:</small>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="avatar_link"
+                                class="form-control form-control-sm mb-2 bg-dark text-white border-secondary"
+                                placeholder="https://...">
+                            <button type="submit" class="btn btn-sm btn-success w-100">Kaydet</button>
+                        </form>
+                    </div>
+                </div>
+
+                <h3 class="text-white fw-bold">{{ user.username }}</h3>
+                <p class="text-secondary mb-2">{{ user.email }}</p>
+
+                <button class="btn btn-sm btn-outline-warning mb-3" data-bs-toggle="modal"
+                    data-bs-target="#editProfileModal">
+                    ⚙️ Bilgileri Düzenle
+                </button>
+
+                <hr class="border-secondary">
+
+                <h5 class="text-white mt-3">Mevcut Seviye</h5>
+                <span class="badge bg-{{ rozet_renk }} fs-5 px-4 py-2 shadow">{{ rozet }}</span>
+
+                <div class="mt-4">
+                    <p class="text-secondary mb-1 d-flex justify-content-between">
+                        <span>XP Puanı</span>
+                        <span class="text-white fw-bold">{{ puan }} / 10000</span>
+                    </p>
+                    <div class="progress bg-secondary" style="height: 20px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
+                            role="progressbar" style="width: {{ bar_yuzdesi }}%"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <small class="text-muted">Yorum yaptıkça artar!</small>
+                        <small>
+                            <a href="#" class="text-danger text-decoration-none fw-bold" data-bs-toggle="modal"
+                                data-bs-target="#xpModal">
+                                ℹ️ Nasıl Kazanırım?
+                            </a>
+                        </small>
+                    </div>
+                </div>
+
+                <a href="{% url 'cikis_yap' %}" class="btn btn-outline-light w-100 mt-4">Çıkış Yap</a>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+
+            <h3 class="text-warning fw-bold mb-4 border-bottom border-secondary pb-2">
+                📂 İzleme Listem <span class="text-secondary fs-5">({{ profil.izleme_listesi.count }})</span>
+            </h3>
+
+            {% if profil.izleme_listesi.all %}
+            <div class="row g-3 mb-5">
+                {% for film in profil.izleme_listesi.all %}
+                <div class="col-4 col-md-3">
+                    <div class="position-relative group-hover">
+                        <a href="{% url 'detay' film.id %}">
+                            <img src="{{ film.resim }}" class="img-fluid rounded border border-secondary shadow-sm"
+                                style="aspect-ratio: 2/3; object-fit: cover; transition: 0.3s;" alt="{{ film.isim }}">
+                        </a>
+                        <a href="{% url 'liste_islem' film.id %}"
+                            class="position-absolute top-0 end-0 badge bg-danger text-white text-decoration-none m-1 shadow"
+                            title="Listeden Çıkar">x</a>
+                    </div>
+                    <small class="d-block text-center text-white mt-2 text-truncate fw-bold">{{ film.isim }}</small>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-dark border-secondary mb-5 text-center p-4">
+                <h4>Listen Bomboş 🕸️</h4>
+                <p class="text-secondary mb-3">Henüz listene hiç film eklememişsin.</p>
+                <a href="/" class="btn btn-sm btn-outline-danger">Filmleri Keşfet</a>
+            </div>
+            {% endif %}
+
+
+            <h3 class="text-danger fw-bold mb-4 border-bottom border-secondary pb-2">
+                💬 Son Yorumların
+            </h3>
+
+            {% if yorumlar %}
+            <div class="row">
+                {% for yorum in yorumlar %}
+                <div class="col-12 mb-3">
+                    <div class="card bg-black border-start border-danger border-3 p-3 shadow-sm h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="text-white mb-0">
+                                <a href="{% url 'detay' yorum.film.id %}"
+                                    class="text-decoration-none text-white hover-red">
+                                    🎬 {{ yorum.film.isim }}
+                                </a>
+                            </h5>
+                            <small class="text-secondary">{{ yorum.tarih|date:"d M Y" }}</small>
+                        </div>
+                        <hr class="border-secondary my-2">
+                        <p class="text-light opacity-75 mb-0 fst-italic">"{{ yorum.icerik }}"</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-dark border-secondary text-center py-5">
+                <h4>Henüz hiç yorum yapmamışsın 😔</h4>
+                <p class="text-secondary">Filmlere yorum yaparak puan kazanmaya başla!</p>
+                <a href="/" class="btn btn-danger">Hemen Yorum Yap</a>
+            </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="xpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border border-danger text-white">
+
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-danger fw-bold">🏆 Puan ve Rütbe Sistemi</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <h6 class="fw-bold text-white mb-3">🚀 Nasıl Puan Kazanırım?</h6>
+                <ul class="list-group list-group-flush bg-dark mb-4">
+                    <li class="list-group-item bg-dark text-white d-flex justify-content-between border-secondary">
+                        <span>📝 Yorum Yapmak</span> <span class="text-success fw-bold">+50 XP</span>
+                    </li>
+                    <li class="list-group-item bg-dark text-white d-flex justify-content-between border-secondary">
+                        <span>👤 Profil Oluşturmak</span> <span class="text-success fw-bold">+100 XP</span>
+                    </li>
+                </ul>
+
+                <h6 class="fw-bold text-white mb-3">🎖️ Rütbeler</h6>
+                <div class="table-responsive">
+                    <table class="table table-dark table-sm text-center align-middle border-secondary">
+                        <thead>
+                            <tr class="text-secondary">
+                                <th>Puan Aralığı</th>
+                                <th>Rütbe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0 - 199</td>
+                                <td><span class="badge bg-secondary">Çaylak İzleyici 🍿</span></td>
+                            </tr>
+                            <tr>
+                                <td>200 - 399</td>
+                                <td><span class="badge bg-info text-dark">Patlamış Mısır Canavarı 🌽</span></td>
+                            </tr>
+                            <tr>
+                                <td>400 - 599</td>
+                                <td><span class="badge bg-primary">Sinema Tutkunu 🎥</span></td>
+                            </tr>
+                            <tr>
+                                <td>600 - 799</td>
+                                <td><span class="badge bg-success">Film Eleştirmeni 🧐</span></td>
+                            </tr>
+                            <tr>
+                                <td>800 - 999</td>
+                                <td><span class="badge bg-warning text-dark">Başrol Oyuncusu 🌟</span></td>
+                            </tr>
+                            <tr>
+                                <td>1000 - 1199</td>
+                                <td><span class="badge bg-danger">Yönetmen Koltuğu 📣</span></td>
+                            </tr>
+                            <tr>
+                                <td>1200 - 1399</td>
+                                <td><span class="badge bg-light text-dark">Yapımcı 💰</span></td>
+                            </tr>
+                            <tr>
+                                <td>1400+</td>
+                                <td><span class="badge bg-dark border border-warning">Sinema Efsanesi 👑</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border border-warning text-white">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-warning fw-bold">⚙️ Profil Ayarları</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="bilgi_guncelle" value="1">
+
+                    <div class="mb-3">
+                        <label class="text-secondary small">Adınız</label>
+                        {{ user_form.first_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-secondary small">Soyadınız</label>
+                        {{ user_form.last_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-secondary small">Email Adresi</label>
+                        {{ user_form.email }}
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-warning fw-bold">GÜNCELLE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,562 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if filmler %}
+{% if filmler.number == 1 %}
+<div class="row mb-5">
+    {% if slider_filmleri %}
+    <div id="filmCarousel" class="carousel slide mb-5 shadow-lg" data-bs-ride="carousel">
+
+        <div class="carousel-indicators">
+            {% for film in slider_filmleri %}
+            <button type="button" data-bs-target="#filmCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+                class="{% if forloop.first %}active{% endif %}" aria-current="true"></button>
+            {% endfor %}
+        </div>
+
+        <div class="carousel-inner">
+            {% for film in slider_filmleri %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="3000">
+
+                <div class="p-5 border border-3 border-dark position-relative bg-black" style="min-height: 450px;">
+                    <div class="row align-items-center">
+
+                        <div class="col-md-8 z-1">
+                            <span class="badge bg-danger mb-2">{{ film.tur }}</span>
+                            <h1 class="display-2 fw-bold text-white text-uppercase"
+                                style="letter-spacing: -2px; text-shadow: 2px 2px 10px #000;">
+                                {{ film.isim }}
+                            </h1>
+                            <p class="lead mt-3 text-light opacity-75 d-none d-md-block" style="max-width: 90%;">
+                                {{ film.konu|truncatewords:20 }}
+                            </p>
+
+                            <div class="mt-4 text-end pe-md-5">
+                                <a href="{% url 'detay' film.id %}"
+                                    class="btn btn-danger rounded-0 fw-bold px-4 py-2 shadow-lg">
+                                    İncele ➜
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 text-center d-none d-md-block">
+                            <img src="{{ film.resim }}" alt="{{ film.isim }}" loading="lazy"
+                                class="img-fluid border border-3 border-danger shadow-red"
+                                style="max-height: 300px; object-fit: cover; transform: rotate(3deg);">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="position-absolute top-0 start-0 w-100 h-100"
+                    style="background-image: url('{{ film.resim }}'); background-size: cover; filter: blur(20px) brightness(0.3); z-index: -1;">
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#filmCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Önceki</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#filmCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Sonraki</span>
+        </button>
+
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endif %}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-8">
+        <form action="" method="GET">
+            <div class="input-group shadow-lg rounded-pill overflow-hidden">
+                <input type="text" name="q" class="form-control py-3 px-4 fw-bold fs-5 border-0"
+                    placeholder="Film, yönetmen veya konu ara..." value="{{ arama_kelimesi|default:'' }}"> <button
+                    class="btn btn-danger px-4" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-search" viewBox="0 0 16 16">
+                        <path
+                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% if uyari_mesaji %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <div class="alert alert-dark border-danger text-white d-inline-block px-5" role="alert">
+            <h4 class="alert-heading fw-bold">😕 Hmmm...</h4>
+            <p class="mb-0 fs-5">{{ uyari_mesaji }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+
+    <div class="col-md-3">
+        <h4 class="text-danger fw-bold mb-4">Film Türleri</h4>
+        <div class="list-group border-start border-white ps-3" style="border-width: 2px !important;">
+            <a href="/?tur=Komedi" class="kategori-item mb-2 rounded">Komedi</a>
+            <a href="/?tur=Aksiyon" class="kategori-item mb-2 rounded">Aksiyon</a>
+            <a href="/?tur=Bilim Kurgu" class="kategori-item mb-2 rounded">Bilim Kurgu</a>
+            <a href="/?tur=Dram" class="kategori-item mb-2 rounded">Dram</a>
+            <a href="/?tur=Korku" class="kategori-item mb-2 rounded">Korku</a>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <h4 class="text-danger fw-bold text-center mb-4">Son İncelenenler</h4>
+
+        <div class="row">
+            {% for film in filmler %}
+            <div class="col-md-4 mb-4">
+                <div class="card film-card-box border-0 h-100 p-2">
+                    <a href="/film/{{ film.id }}">
+                        <img src="{{ film.resim }}" loading="lazy" class="card-img-top img-fluid rounded-top"
+                            alt="{{ film.isim }}" style="height: 350px; object-fit: cover;">
+                    </a>
+                    <div class="card-body text-center">
+                        <div class="text-warning fw-bold mb-1">★ {{ film.puan }}/10</div>
+                        <h5 class="card-title fw-bold text-dark">
+                            <a href="/film/{{ film.id }}" class="text-decoration-none text-dark stretched-link">
+                                {{ film.isim }}
+                            </a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="d-flex justify-content-center mt-4 mb-5">
+            <span class="step-links">
+
+                {% if filmler.has_previous %}
+                <a href="?page={{ filmler.previous_page_number }}{% if request.GET.tur %}&tur={{ request.GET.tur }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                    class="btn btn-outline-light me-2 hover-red">
+                    &laquo; Önceki
+                </a>
+                {% endif %}
+
+                <span
+                    class="current text-danger fw-bold mx-3 align-middle border border-secondary px-3 py-2 rounded bg-dark">
+                    Sayfa {{ filmler.number }} / {{ filmler.paginator.num_pages }}
+                </span>
+
+                {% if filmler.has_next %}
+                <a href="?page={{ filmler.next_page_number }}{% if request.GET.tur %}&tur={{ request.GET.tur }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                    class="btn btn-outline-light ms-2 hover-red">
+                    Sonraki &raquo;
+                </a>
+                {% endif %}
+
+            </span>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="container-fluid py-5 mt-5"
+    style="background: radial-gradient(circle, #2b0000 0%, #000000 100%); border-top: 4px solid #D80000;">
+    <div class="container text-center">
+
+        <h2 class="text-white fw-bold mb-2">🎮 Eğlence Kutusu</h2>
+        <p class="text-secondary mb-4">Kendini test et, puan topla veya ruh haline göre film kap!</p>
+
+        <div class="d-flex justify-content-center mb-4">
+            <ul class="nav nav-pills p-1 bg-dark rounded-pill border border-secondary" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active rounded-pill px-4 fw-bold" id="pills-mod-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-mod" type="button">
+                        🎭 Modunu Bul
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill px-4 fw-bold" id="pills-trivia-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-trivia" type="button" onclick="oyunuBaslat('trivia')">
+                        🧠 Sine-Bilgi
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill px-4 fw-bold" id="pills-emoji-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-emoji" type="button" onclick="oyunuBaslat('emoji')">
+                        🎬 Emoji Bil
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <div id="score-board" class="d-none mb-3">
+                    <span class="badge bg-warning text-dark fs-5 px-4 py-2 shadow">
+                        🏆 Puan: <span id="user-score">0</span>
+                    </span>
+                </div>
+
+                <div class="tab-content" id="pills-tabContent">
+
+                    <div class="tab-pane fade show active" id="pills-mod">
+                        <div class="card bg-dark border border-secondary shadow-lg p-5">
+                            <h3 class="text-danger fw-bold mb-4">Şu anki ruh halin ne?</h3>
+                            <div class="row g-3">
+                                <div class="col-4">
+                                    <button onclick="modOner('uzgun')"
+                                        class="btn btn-outline-secondary w-100 py-4 mod-btn">
+                                        <div class="fs-1">🌧️</div>
+                                        <div class="mt-2 fw-bold text-white">Hüzünlü</div>
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button onclick="modOner('enerjik')"
+                                        class="btn btn-outline-secondary w-100 py-4 mod-btn">
+                                        <div class="fs-1">🔥</div>
+                                        <div class="mt-2 fw-bold text-white">Enerjik</div>
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button onclick="modOner('korku')"
+                                        class="btn btn-outline-secondary w-100 py-4 mod-btn">
+                                        <div class="fs-1">👻</div>
+                                        <div class="mt-2 fw-bold text-white">Cesur</div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="mod-sonuc"
+                                class="mt-4 p-3 rounded bg-black border border-danger d-none animate-fade">
+                                <h4 class="text-warning fw-bold" id="mod-film-adi"></h4>
+                                <p class="text-light opacity-75" id="mod-film-desc"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="game-card-wrapper">
+                        <div class="card bg-dark border border-secondary shadow-lg p-5 position-relative">
+                            <div style="min-height: 80px;">
+                                <h3 class="text-white fw-bold mb-4" id="game-question">...</h3>
+                            </div>
+
+                            <div class="d-grid gap-3 col-md-10 mx-auto" id="game-options">
+                            </div>
+
+                            <p id="game-feedback" class="mt-3 fw-bold" style="min-height: 24px;"></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* Sekme Tasarımı */
+    .nav-pills .nav-link.active {
+        background-color: #D80000;
+    }
+
+    .nav-pills .nav-link {
+        color: white;
+    }
+
+    .mod-btn:hover {
+        background-color: #222;
+        border-color: #D80000;
+        transform: translateY(-5px);
+        transition: 0.3s;
+    }
+
+    .animate-fade {
+        animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    let puan = 0;
+    let currentTur = '';
+
+    /* --- HAFIZA SİSTEMİ (TEKRARI ÖNLEMEK İÇİN) --- */
+    // Hangi soruların sorulduğunu burada tutacağız
+    let gecmisTrivia = [];
+    let gecmisEmoji = [];
+    let gecmisMod = {
+        'uzgun': [],
+        'enerjik': [],
+        'korku': []
+    };
+
+    /* --- VERİ HAVUZU --- */
+    const modData = {
+        'uzgun': [
+            { t: "The Green Mile", d: "Ağlamak garanti. İnsanlık dersi veren bir başyapıt." },
+            { t: "Hachiko", d: "Bir köpeğin sadakati... Gözlerin yaşaracak." },
+            { t: "Titanic", d: "Asla batmaz dediler... Aşk ve hüzün bir arada." },
+            { t: "Schindler's List", d: "Tarihin en karanlık döneminde bir umut ışığı." },
+            { t: "The Pursuit of Happyness", d: "Asla pes etme. Mutluluk bir gün seni bulacak." },
+            { t: "Babam ve Oğlum", d: "Mendillerini hazırla. 'Ona gitme' sahnesinde dağılacaksın." },
+            { t: "La Vita è Bella", d: "Hayat Güzeldir... Savaşın ortasında bir baba ve oğul." },
+            { t: "The Notebook", d: "Gerçek aşk asla ölmez. Romantiklerin zirvesi." },
+            { t: "Interstellar", d: "Sadece bilim kurgu değil, bir baba-kız dramı." },
+            { t: "7. Koğuştaki Mucize", d: "Adalet ve sevgi üzerine yürek burkan bir hikaye." },
+            { t: "Dead Poets Society", d: "O Captain! My Captain! Hayata bakışın değişecek." },
+            { t: "Up (Yukarı Bak)", d: "İlk 10 dakikasında ağlamayan bizden değildir." },
+            { t: "Ayla", d: "Savaşın ortasında filizlenen bir sevgi öyküsü." },
+            { t: "Good Will Hunting", d: "Kendi potansiyelini keşfetmek üzerine harika bir dram." },
+            { t: "The Pianist", d: "Sanat, savaş ve hayatta kalma mücadelesi." },
+            { t: "Me Before You", d: "Aşk bazen fedakarlık gerektirir." },
+            { t: "Grave of the Fireflies", d: "Savaşın çocuklar üzerindeki etkisini en iyi anlatan anime." },
+            { t: "Lion", d: "Evin yolunu bulmak hiç bu kadar zor olmamıştı." },
+            { t: "Forrest Gump", d: "Hayat bir kutu çikolata gibidir..." },
+            { t: "Manchester by the Sea", d: "Yas ve kabullenme üzerine ağır ama etkili bir film." }
+        ],
+        'enerjik': [
+            { t: "John Wick", d: "Durmak bilmeyen aksiyon. Kalemin kılıçtan keskin olduğu an." },
+            { t: "Mad Max: Fury Road", d: "Çöl, benzin ve patlamalar. Adrenalin tavan!" },
+            { t: "Avengers: Endgame", d: "Epik bir final. Kahramanlar toplanıyor." },
+            { t: "Mission Impossible", d: "İmkansız diye bir şey yoktur, Tom Cruise hariç." },
+            { t: "Gladiator", d: "Güç ve onur. Arenada hayatta kal!" },
+            { t: "Top Gun: Maverick", d: "Hız sınırlarını zorla. Kokpitte nefes alamayacaksın." },
+            { t: "The Dark Knight", d: "Kaos ve düzenin savaşı. Joker sahnede!" },
+            { t: "Baby Driver", d: "Müzik ritmiyle senkronize araba kovalamacası." },
+            { t: "Inception", d: "Rüya içinde rüya... Beynini yakmaya hazır ol." },
+            { t: "Spider-Man: No Way Home", d: "Çoklu evrenler çarpışıyor, nostalji rüzgarı!" },
+            { t: "Fast & Furious 5", d: "Rio sokaklarında kasa çalmak mı? Tam gaz devam." },
+            { t: "Kill Bill: Vol 1", d: "İntikam soğuk yenen bir yemektir. Tarantino stili." },
+            { t: "Django Unchained", d: "Zincirlerini kır ve özgürlüğünü al." },
+            { t: "Terminator 2", d: "Hasta la vista, baby. Aksiyon sinemasının zirvesi." },
+            { t: "The Matrix", d: "Mavi hap mı, kırmızı hap mı? Gerçeğe uyan." },
+            { t: "RRR", d: "Kaplanla dövüşen adamlar mı? Bollywood enerjisi!" },
+            { t: "Kingsman", d: "Centilmen ajanlar ve çılgın dövüş sahneleri." },
+            { t: "Edge of Tomorrow", d: "Yaşa, Öl, Tekrar Et. Durmak yok." },
+            { t: "300", d: "Bu Sparta! Görsel bir şölen." },
+            { t: "Avatar: Way of Water", d: "Pandora'nın sularında görsel bir yolculuk." }
+        ],
+        'korku': [
+            { t: "The Conjuring", d: "Işıkları açık bırakmak isteyeceksin." },
+            { t: "IT (O)", d: "Palyaçolardan korkmak için geçerli bir sebep." },
+            { t: "Hereditary", d: "Psikolojini zorlayacak, rahatsız edici bir deneyim." },
+            { t: "Get Out", d: "Hiçbir şey göründüğü gibi değil..." },
+            { t: "Sinister", d: "O kasetleri asla izlememeliydin." },
+            { t: "A Quiet Place", d: "Ses çıkarırsan ölürsün. Sessizliğin gerilimi." },
+            { t: "The Shining", d: "İşte Johnny! Bir otelde deliliğe yolculuk." },
+            { t: "Psycho", d: "O meşhur duş sahnesi... Klasiklerin babası." },
+            { t: "Insidious", d: "Astral seyahat hiç bu kadar korkunç olmamıştı." },
+            { t: "The Silence of the Lambs", d: "Kuzuların sessizliğini duyabiliyor musun?" },
+            { t: "Alien", d: "Uzayda kimse çığlığını duyamaz." },
+            { t: "Dabbe: Zehr-i Cin", d: "Yerli korku. Işıkları kapalı izlemeyi deneme bile." },
+            { t: "The Ring", d: "7 günün kaldı... O videoyu izlememeliydin." },
+            { t: "Saw (Testere)", d: "Oyun oynamak ister misin? Seçim senin." },
+            { t: "Paranormal Activity", d: "Evde yalnızken izlememen gereken bir film." },
+            { t: "Us (Biz)", d: "Kendinle karşılaşmak en büyük kabusun olabilir." },
+            { t: "Train to Busan", d: "Zombilerle dolu bir trende hayatta kalma savaşı." },
+            { t: "Bird Box", d: "Gözlerini açarsan ölürsün." },
+            { t: "Halloween", d: "Michael Myers bu gece eve dönüyor." },
+            { t: "Midsommar", d: "Gündüz vakti korku olur mu? Evet, hem de çok fena." }
+        ]
+    };
+
+    const triviaData = [
+        { q: "'Yüzüklerin Efendisi' yönetmeni kimdir?", o: ["Nolan", "Peter Jackson", "Spielberg"], a: 1 },
+        { q: "Hangi filmde 'I am your father' repliği geçer?", o: ["Star Wars", "Star Trek", "Matrix"], a: 0 },
+        { q: "Titanic filminde Jack rolünü kim oynadı?", o: ["Brad Pitt", "Tom Cruise", "DiCaprio"], a: 2 },
+        { q: "Joker (2019) filminde Joker'i kim oynadı?", o: ["Heath Ledger", "Jared Leto", "Joaquin Phoenix"], a: 2 },
+        { q: "İlk renkli Türk filmi hangisidir?", o: ["Halıcı Kız", "Susuz Yaz", "Turist Ömer"], a: 0 },
+        { q: "Matrix serisinde Neo'nun gerçek adı nedir?", o: ["John Anderson", "Thomas Anderson", "Agent Smith"], a: 1 },
+        { q: "'Baba' (The Godfather) filminin yönetmeni kimdir?", o: ["Coppola", "Scorsese", "Tarantino"], a: 0 },
+        { q: "Hababam Sınıfı'nda 'Mahmut Hoca'yı kim canlandırmıştır?", o: ["Adile Naşit", "Münir Özkul", "Kemal Sunal"], a: 1 },
+        { q: "Hangi film IMDb Top 250 listesinde 1. sıradadır?", o: ["Esaretin Bedeli", "Baba", "Kara Şövalye"], a: 0 },
+        { q: "Marvel evreninde 'Iron Man'in gerçek adı nedir?", o: ["Steve Rogers", "Bruce Banner", "Tony Stark"], a: 2 },
+        { q: "Quentin Tarantino'nun yönettiği kült film hangisidir?", o: ["Pulp Fiction", "Fight Club", "Se7en"], a: 0 },
+        { q: "Dövüş Kulübü'nün (Fight Club) birinci kuralı nedir?", o: ["Asla kaybetme", "Kulüpten bahsetme", "Her gün dövüş"], a: 1 },
+        { q: "Harry Potter hangi binaya seçilmiştir?", o: ["Slytherin", "Hufflepuff", "Gryffindor"], a: 2 },
+        { q: "Yeşilçam'da 'Sultan' lakaplı oyuncumuz kimdir?", o: ["Filiz Akın", "Fatma Girik", "Türkan Şoray"], a: 2 },
+        { q: "Geleceğe Dönüş filmindeki arabanın markası nedir?", o: ["Ferrari", "DeLorean", "Mustang"], a: 1 },
+        { q: "Avatar filmindeki gezegenin adı nedir?", o: ["Pandora", "Tatooine", "Mars"], a: 0 },
+        { q: "Hitchcock'un meşhur 'duş sahnesi' olan filmi hangisidir?", o: ["Kuşlar", "Sapık (Psycho)", "Arka Pencere"], a: 1 },
+        { q: "Tosun Paşa filminde hangi iki aile kavga etmektedir?", o: ["Tellioğulları-Seferoğulları", "Can-Mal", "Ak-Kara"], a: 0 },
+        { q: "Gladyatör filminde başrolü kim oynamıştır?", o: ["Mel Gibson", "Russell Crowe", "Brad Pitt"], a: 1 },
+        { q: "Leon (Sevginin Gücü) filmindeki küçük kızın adı nedir?", o: ["Mathilda", "Lisa", "Anna"], a: 0 },
+        { q: "Terminator'ün efsanevi repliği hangisidir?", o: ["Hello world", "I'll be back", "Game over"], a: 1 },
+        { q: "Nuri Bilge Ceylan'ın Altın Palmiye kazanan filmi hangisidir?", o: ["Uzak", "Kış Uykusu", "Üç Maymun"], a: 1 },
+        { q: "Rocky Balboa'nın en büyük rakibi ve dostu kimdir?", o: ["Apollo Creed", "Ivan Drago", "Clubber Lang"], a: 0 },
+        { q: "Toy Story (Oyuncak Hikayesi) filmindeki kovboyun adı nedir?", o: ["Buzz", "Woody", "Jessie"], a: 1 },
+        { q: "Christopher Nolan'ın rüyalar içinde geçen filmi hangisidir?", o: ["Interstellar", "Tenet", "Inception"], a: 2 },
+        { q: "Black Panther filminin geçtiği kurgusal ülke neresidir?", o: ["Wakanda", "Zamunda", "Genovia"], a: 0 }
+    ];
+
+    const emojiData = [
+        { q: "🚢🧊💔", o: ["Ice Age", "Titanic", "Frozen"], a: 1 },
+        { q: "🦁👑🐗", o: ["Madagascar", "Lion King", "Jungle Book"], a: 1 },
+        { q: "🕷️🕸️🔴", o: ["Ant-Man", "Deadpool", "Spider-Man"], a: 2 },
+        { q: "🤡🎈😱", o: ["Joker", "IT", "Circus"], a: 1 },
+        { q: "🐼👊🍜", o: ["Kung Fu Panda", "Ted", "Mulan"], a: 0 },
+        { q: "🍫🏭🎫", o: ["Wonka", "Candyman", "Elf"], a: 0 },
+        { q: "⚡👓🧙‍♂️", o: ["Harry Potter", "Percy Jackson", "Doctor Strange"], a: 0 },
+        { q: "🐠🌊🐢", o: ["Shark Tale", "Finding Nemo", "Little Mermaid"], a: 1 },
+        { q: "🏠🎈👴", o: ["Up (Yukarı Bak)", "Balloon", "Sky High"], a: 0 },
+        { q: "💊🕶️🟢", o: ["John Wick", "Matrix", "Inception"], a: 1 },
+        { q: "👻🚫🔫", o: ["Casper", "Ghostbusters", "Poltergeist"], a: 1 },
+        { q: "🏃🍫🍤", o: ["Forrest Gump", "Runner Runner", "Chocolat"], a: 0 },
+        { q: "🦇🌃🃏", o: ["Superman", "Batman", "Joker"], a: 1 },
+        { q: "⚔️🌌🤖", o: ["Star Trek", "Star Wars", "Guardians of Galaxy"], a: 1 },
+        { q: "🦖🦕🚙", o: ["Godzilla", "Jurassic Park", "King Kong"], a: 1 },
+        { q: "🕶️👽🔫", o: ["E.T.", "Alien", "Men in Black"], a: 2 },
+        { q: "🏠😱🎄", o: ["Elf", "Grinch", "Home Alone"], a: 2 },
+        { q: "🚗⚡🕰️", o: ["Time Machine", "Back to the Future", "Terminator"], a: 1 },
+        { q: "🏐🏝️📦", o: ["Lost", "Cast Away", "Robinson Crusoe"], a: 1 },
+        { q: "🐀👨‍🍳🍲", o: ["Stuart Little", "Ratatouille", "Mouse Hunt"], a: 1 },
+        { q: "🎸💀🕯️", o: ["Coco", "Book of Life", "Soul"], a: 0 },
+        { q: "🤠🚀🧸", o: ["Small Soldiers", "Toy Story", "Lego Movie"], a: 1 },
+        { q: "🥊🥩🏃", o: ["Raging Bull", "Creed", "Rocky"], a: 2 },
+        { q: "🏴‍☠️🦜⚓", o: ["Peter Pan", "Hook", "Pirates of Caribbean"], a: 2 },
+        { q: "👽🚲🌕", o: ["E.T.", "Super 8", "Alien"], a: 0 },
+        { q: "🏹🔥🐦", o: ["Brave", "Hunger Games", "Robin Hood"], a: 1 },
+        { q: "👹🏰🐴", o: ["Shrek", "Monsters Inc", "Trolls"], a: 0 },
+        { q: "🔵🌲🐉", o: ["Smurfs", "Avatar", "Warcraft"], a: 1 },
+        { q: "🎹💃🕺", o: ["La La Land", "Chicago", "Grease"], a: 0 },
+        { q: "🦈🌊⛵", o: ["Deep Blue Sea", "Jaws", "The Meg"], a: 1 }
+    ];
+
+    /* --- 1. MODUNU BUL (Benzersiz Rastgele Seçim) --- */
+    function modOner(mod) {
+        const havuz = modData[mod];
+        const gecmis = gecmisMod[mod];
+
+        // Eğer hepsi gösterildiyse geçmişi temizle (Başa dön)
+        if (gecmis.length >= havuz.length) {
+            gecmis.length = 0;
+        }
+
+        // Daha önce gösterilmemiş bir index bul
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * havuz.length);
+        } while (gecmis.includes(randomIndex));
+
+        // Seçilen indexi geçmişe kaydet
+        gecmis.push(randomIndex);
+        const secilen = havuz[randomIndex];
+
+        const sonucAlani = document.getElementById('mod-sonuc');
+        sonucAlani.classList.remove('d-none');
+        sonucAlani.classList.remove('animate-fade');
+        void sonucAlani.offsetWidth;
+        sonucAlani.classList.add('animate-fade');
+
+        document.getElementById('mod-film-adi').innerText = "Öneri: " + secilen.t;
+        document.getElementById('mod-film-desc').innerText = secilen.d;
+    }
+
+    /* --- OYUN BAŞLATMA --- */
+    function oyunuBaslat(tur) {
+        currentTur = tur;
+        document.getElementById('pills-mod').classList.remove('show', 'active');
+        document.getElementById('game-card-wrapper').classList.add('show', 'active');
+        document.getElementById('score-board').classList.remove('d-none');
+        yeniSoru();
+    }
+
+    /* --- 2. YENİ SORU GETİR (Benzersiz Rastgele Seçim) --- */
+    function yeniSoru() {
+        let havuz, gecmis, soruId, siklarId, msgId;
+
+        if (currentTur === 'trivia') {
+            havuz = triviaData;
+            gecmis = gecmisTrivia;
+            soruId = 'game-question';
+            siklarId = 'game-options';
+            msgId = 'game-feedback';
+        } else {
+            havuz = emojiData;
+            gecmis = gecmisEmoji;
+            soruId = 'game-question';
+            siklarId = 'game-options';
+            msgId = 'game-feedback';
+        }
+
+        // Eğer hepsi sorulduysa geçmişi temizle
+        if (gecmis.length >= havuz.length) {
+            gecmis.length = 0;
+        }
+
+        // Benzersiz soru seç
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * havuz.length);
+        } while (gecmis.includes(randomIndex));
+
+        gecmis.push(randomIndex);
+        const soru = havuz[randomIndex];
+
+        document.getElementById(msgId).innerText = "";
+        document.getElementById(soruId).innerText = soru.q;
+
+        let html = "";
+        soru.o.forEach((sik, index) => {
+            html += `<button onclick="cevapVer(${index}, ${soru.a}, this)" class="btn btn-outline-light py-3 fw-bold border-secondary game-btn">${sik}</button>`;
+        });
+        document.getElementById(siklarId).innerHTML = html;
+    }
+
+    /* --- CEVAP KONTROL --- */
+    function cevapVer(secilen, dogru, btn) {
+        const allBtns = document.querySelectorAll('.game-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        const feedback = document.getElementById('game-feedback');
+
+        if (secilen === dogru) {
+            btn.classList.remove('btn-outline-light');
+            btn.classList.add('btn-success');
+            feedback.innerText = "Mükemmel! +10 Puan 🌟";
+            feedback.className = "mt-3 fw-bold text-success animate-fade";
+            puan += 10;
+            document.getElementById('user-score').innerText = puan;
+        } else {
+            btn.classList.remove('btn-outline-light');
+            btn.classList.add('btn-danger');
+            feedback.innerText = "Yanlış Cevap 💥";
+            feedback.className = "mt-3 fw-bold text-danger animate-fade";
+            allBtns[dogru].classList.remove('btn-outline-light');
+            allBtns[dogru].classList.add('btn-success');
+        }
+
+        setTimeout(() => {
+            yeniSoru();
+        }, 1500);
+    }
+
+    document.getElementById('pills-mod-tab').addEventListener('click', function () {
+        document.getElementById('game-card-wrapper').classList.remove('show', 'active');
+        document.getElementById('score-board').classList.add('d-none');
+    });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="mb-4">
+        <a href="/" class="text-decoration-none text-secondary hover-red">
+            <span class="fs-4">←</span> Listeye Geri Dön
+        </a>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="position-relative">
+                <img src="{{ film.resim }}" class="img-fluid rounded shadow-lg border border-2 border-danger"
+                    alt="{{ film.isim }}"
+                    style="width: 100%; object-fit: cover; box-shadow: 0 0 20px rgba(216, 0, 0, 0.3) !important;">
+
+                <div class="d-grid gap-2 mt-3">
+                    <button class="btn btn-danger btn-lg fw-bold rounded-0">
+                        ▶ HEMEN İZLE
+                    </button>
+
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'liste_islem' film.id %}"
+                        class="btn {% if listede_mi %}btn-success{% else %}btn-outline-light{% endif %} btn-sm fw-bold">
+                        {% if listede_mi %}
+                        ✓ Listemde Ekli (Çıkar)
+                        {% else %}
+                        + Listeme Ekle
+                        {% endif %}
+                    </a>
+                    {% else %}
+                    <button type="button" class="btn btn-outline-light btn-sm"
+                        onclick="alert('Bu özelliği kullanmak için lütfen giriş yapın! 🔒')">
+                        + Listeme Ekle
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+
+            <h1 class="display-3 fw-bold text-white mb-2" style="letter-spacing: -1px;">
+                {{ film.isim }}
+            </h1>
+
+            <div class="mb-4">
+                <span class="badge bg-danger text-white fs-6 me-2 px-3 py-2">
+                    {{ film.tur }}
+                </span>
+                <span class="badge bg-warning text-dark fs-6 me-2 px-3 py-2">
+                    ★ {{ film.puan }}/10
+                </span>
+                <span class="text-secondary ms-2">2sa 15dk • 4K UHD</span>
+            </div>
+
+            <h4 class="text-danger border-bottom border-secondary pb-2 d-inline-block mb-3">
+                Film Konusu
+            </h4>
+
+            <p class="lead text-light opacity-75" style="line-height: 1.8;">
+                {{ film.konu }}
+            </p>
+
+            <div class="row mt-5">
+                <div class="col-md-6">
+                    <h6 class="text-secondary text-uppercase fw-bold">Yönetmen</h6>
+                    <p class="text-white fs-5">{{ film.yonetmen|default:"Belirtilmemiş" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary text-uppercase fw-bold">Oyuncular</h6>
+                    <p class="text-white opacity-75">{{ film.oyuncular|default:"Belirtilmemiş" }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row mt-5 pt-5 border-top border-secondary">
+
+        <div class="col-md-8">
+            <h3 class="text-danger fw-bold mb-4">Yorumlar ({{ film.yorumlar.count }})</h3>
+
+            <div class="card bg-dark border border-secondary mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-white mb-3">Yorum Yap</h5>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {% if not user.is_authenticated %}
+                        <div class="mb-3">
+                            {{ form.isim }}
+                        </div>
+                        {% else %}
+                        <input type="hidden" name="isim" value="{{ user.username }}">
+
+                        <div class="mb-2 text-secondary">
+                            👤 <strong>{{ user.username }}</strong> olarak yorum yapıyorsun.
+                        </div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <label class="text-secondary small">Puanınız</label>
+                            {{ form.puan }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.icerik }}
+                        </div>
+                        <button type="submit" class="btn btn-danger fw-bold px-4">GÖNDER</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="yorumlar-listesi">
+                {% for yorum in film.yorumlar.all|dictsortreversed:"tarih" %}
+                <div class="card bg-black border-start border-danger border-3 mb-3 p-3">
+                    <div class="d-flex">
+
+                        <div class="flex-shrink-0 me-3">
+                            {% if yorum.kullanici %}
+                            <img src="{{ yorum.kullanici.profil.avatar }}" class="rounded-circle" width="50" height="50"
+                                style="object-fit: cover;">
+                            {% else %}
+                            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="rounded-circle"
+                                width="50" height="50">
+                            {% endif %}
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="fw-bold text-white mb-1">
+                                    {{ yorum.isim }}
+
+                                    {% if yorum.kullanici %}
+                                    <span class="badge bg-danger" style="font-size: 0.6rem;">ÜYE</span>
+                                    {% endif %}
+
+                                    <span class="text-warning ms-2">★ {{ yorum.puan }}</span>
+                                </h6>
+                                <small class="text-secondary">{{ yorum.tarih|date:"d M Y" }}</small>
+                            </div>
+                            <p class="text-light opacity-75 mb-0">{{ yorum.icerik }}</p>
+                        </div>
+
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-secondary fst-italic">Henüz yorum yapılmamış. İlk yorumu sen yap! 🚀</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4 mt-5 mt-md-0">
+            <div class="card bg-dark border border-warning mb-4">
+                <div class="card-header bg-warning text-dark fw-bold">⚠️ Yorum Kuralları</div>
+                <div class="card-body text-light opacity-75">
+                    <ul class="ps-3 mb-0">
+                        <li>Saygılı olun.</li>
+                        <li>Spoiler vermeyin.</li>
+                        <li>Küfür etmeyin.</li>
+                        <li>Konu dışına çıkmayın.</li>
+                        <li>Yorumlarınızda kişisel saldırılardan kaçının.</li>
+                        <li>Yalnızca konuya katkı sağlayacak içerikler paylaşın.</li>
+                        <li>Spam veya reklam içeren yorumlar yapmayın.</li>
+                        <li>Yasalara ve telif haklarına uygun davranın.</li>
+                        <li>Yorumlarınızda anlaşılır ve düzgün bir dil kullanın.</li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-5 pt-5 border-top border-secondary">
+        <h3 class="text-white mb-4">Bunları da Beğenebilirsiniz</h3>
+
+        <div class="row">
+            {% for benzer in benzer_filmler %}
+            <div class="col-md-3 col-6 mb-4">
+                <div class="card bg-dark text-white border-0 shadow h-100">
+                    <a href="/film/{{ benzer.id }}">
+                        <img src="{{ benzer.resim }}" loading="lazy" class="card-img-top rounded"
+                            alt="{{ benzer.isim }}"
+                            style="height: 250px; object-fit: cover; opacity: 0.8; transition: 0.3s;">
+                    </a>
+                    <div class="card-body p-2 text-center">
+                        <h6 class="card-title fw-bold text-truncate">
+                            <a href="/film/{{ benzer.id }}" class="text-decoration-none text-white hover-red">
+                                {{ benzer.isim }}
+                            </a>
+                        </h6>
+                        <small class="text-warning">★ {{ benzer.puan }}</small>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-secondary fst-italic">Bu kategoride henüz başka benzer film yok.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
