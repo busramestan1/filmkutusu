@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path
 from filmler.views import (
  anasayfa, detay, hakkinda, iletisim, en_iyiler,
- kayit_ol, giris_yap, cikis_yap, profil,listeye_ekle_cikar
+ kayit_ol, giris_yap, cikis_yap, profil,listeye_ekle_cikar, puan_kaydet ,
+   arama_oner, 
 )
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,4 +20,6 @@ urlpatterns = [
     path('cikis/', cikis_yap, name='cikis_yap'),
     path('profil/', profil, name='profil'),
     path('liste-islem/<int:id>/', listeye_ekle_cikar, name='liste_islem'),
+    path('puan-kaydet/', puan_kaydet, name='puan_kaydet'),
+    path('arama-oner/', arama_oner, name='arama_oner'),
 ]

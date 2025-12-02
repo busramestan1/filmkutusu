@@ -8,26 +8,33 @@ from django.contrib.auth.decorators import login_required
 from .models import Film, Yorum, Iletisim, Profil
 from .forms import YorumForm, IletisimForm, KullaniciGuncellemeForm
 from django.db.models import Avg # <-- Bunu en tepeye ekle
+from django.http import JsonResponse
+import json
+
+
 
 
 def anasayfa(request):
-    # 1. Tüm filmleri çek
     tum_filmler = Film.objects.all().order_by('-id')
+    slider_filmleri = tum_filmler[:5]
     
-    # --- YENİ EKLENEN KISIM: SLIDER İÇİN İLK 5 FİLM ---
-    slider_filmleri = tum_filmler[:5] 
-    
-    # Linkten gelen bilgileri al
     search_query = request.GET.get('q')
     kategori_query = request.GET.get('tur')
-    
     uyari_mesaji = ""
 
-    # --- FİLTRELEME MANTIĞI ---
+    # --- GÜÇLENDİRİLMİŞ ARAMA MANTIĞI ---
     if search_query:
+        # Kullanıcının yazdığını farklı varyasyonlarla arayalım (Türkçe yaması)
+        # 1. Normal arama
+        # 2. Baş harfleri büyüterek arama (hızlı -> Hızlı)
+        # 3. Tamamen büyüterek arama (hızlı -> HIZLI)
         tum_filmler = tum_filmler.filter(
-            Q(isim__icontains=search_query) | Q(konu__icontains=search_query)
-        )
+            Q(isim__icontains=search_query) | 
+            Q(konu__icontains=search_query) |
+            Q(isim__icontains=search_query.title()) | # Hızlı
+            Q(isim__icontains=search_query.upper())    # HIZLI
+        ).distinct() # Aynı filmi 2 kere getirmesin diye
+        
         if not tum_filmler.exists():
             uyari_mesaji = f"Üzgünüz, '{search_query}' hakkında bir sonuç bulamadık. Ama bunları sevebilirsiniz 👇"
             tum_filmler = Film.objects.all().order_by('-id')[:4]
@@ -35,22 +42,30 @@ def anasayfa(request):
     elif kategori_query:
         tum_filmler = tum_filmler.filter(tur=kategori_query)
         if not tum_filmler.exists():
-            uyari_mesaji = f"Henüz '{kategori_query}' kategorisinde filmimiz yok. Bunlara bakabilirsin 👇"
+            uyari_mesaji = f"Henüz '{kategori_query}' kategorisinde filmimiz yok."
             tum_filmler = Film.objects.all().order_by('-id')[:4]
 
     # --- SAYFALAMA ---
     paginator = Paginator(tum_filmler, 3) 
     page_number = request.GET.get('page')
     filmler = paginator.get_page(page_number)
+    
+    # --- LİDER TABLOSU ---
+    lider_tablosu = Profil.objects.filter(oyun_puani__gt=0, user__is_superuser=False).order_by('-oyun_puani')[:10]
 
     return render(request, 'anasayfa.html', {
         'filmler': filmler,
-        'slider_filmleri': slider_filmleri, # <-- HTML'e gönderiyoruz
+        'slider_filmleri': slider_filmleri,
         'uyari_mesaji': uyari_mesaji,
-        'arama_kelimesi': search_query
+        'arama_kelimesi': search_query,
+        'lider_tablosu': lider_tablosu
     })
 
-  # --- DETAY SAYFASI ---
+
+  
+  
+  
+# --- DETAY SAYFASI ---
 
 def detay(request, id):
     film = get_object_or_404(Film, id=id)
@@ -124,9 +139,12 @@ def iletisim(request):
     return render(request, 'iletisim.html', {'form': form})
 
 def en_iyiler(request):
-    en_iyi_filmler = Film.objects.all().order_by('-puan')[:10]
+    # DEĞİŞİKLİK BURADA 👇
+    # '-puan': Puanı yüksek olanı başa al.
+    # '-id': Puanlar eşitse, ID'si büyük olanı (yani en son ekleneni) başa al.
+    en_iyi_filmler = Film.objects.all().order_by('-puan', '-id')[:10]
+    
     return render(request, 'en_iyiler.html', {'filmler': en_iyi_filmler})
-
 
 # --- ÜYELİK SİSTEMİ ---
 
@@ -270,3 +288,44 @@ def listeye_ekle_cikar(request, id):
         
     # Geldiğin sayfaya (Detay sayfasına) geri dön
     return redirect('detay', id=id)
+
+
+# --- OYUN PUANI KAYDETME (AJAX) ---
+def puan_kaydet(request):
+    if request.method == 'POST' and request.user.is_authenticated:
+        try:
+            data = json.loads(request.body)
+            kazanilan_puan = int(data.get('puan', 0))
+            
+            profil = request.user.profil
+            
+            # 👇 DÜZELTİLEN KISIM: Sadece oyun_puani artıyor
+            profil.oyun_puani += kazanilan_puan 
+            profil.save()
+            
+            # Cevap olarak yeni oyun puanını gönder
+            return JsonResponse({'status': 'success', 'yeni_puan': profil.oyun_puani})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+            
+    return JsonResponse({'status': 'error', 'message': 'Yetkisiz işlem'})
+
+# --- CANLI ARAMA ÖNERİSİ (AJAX) ---
+def arama_oner(request):
+    query = request.GET.get('term', '')
+    if len(query) > 2: # 2 harften fazla yazınca çalışsın
+        filmler = Film.objects.filter(
+            Q(isim__icontains=query) | 
+            Q(isim__icontains=query.title())
+        )[:5] # En fazla 5 öneri göster
+        
+        results = []
+        for f in filmler:
+            results.append({
+                'id': f.id,
+                'label': f.isim,
+                'resim': f.resim,
+                'puan': f.puan
+            })
+        return JsonResponse(results, safe=False)
+    return JsonResponse([], safe=False)

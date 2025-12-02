@@ -51,5 +51,7 @@ class Profil(models.Model):
     # 👇 YENİ EKLENEN SATIR: İzleme Listesi (Bir sürü film tutabilir)
     izleme_listesi = models.ManyToManyField(Film, blank=True, related_name='listeye_alanlar')
 
+    oyun_puani = models.IntegerField(default=0)
+
     def __str__(self):
         return self.user.username

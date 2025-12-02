@@ -19,8 +19,8 @@ class Command(BaseCommand):
         toplam_eklenen = 0
         
         # Taranmasını istediğiniz sayfa aralığını giriniz (1-20 1. sayfadan 20. sayfaya kadar olan filmleri tarar)
-        BASLANGIC_SAYFA = 31  #en son 30 sayfayı taradı
-        BITIS_SAYFA = 45
+        BASLANGIC_SAYFA = 101  #en son  100 sayfayı taradı
+        BITIS_SAYFA = 120
 
         self.stdout.write(f"--- Tarama Başlıyor: Sayfa {BASLANGIC_SAYFA} ile {BITIS_SAYFA} arası ---")
 
@@ -100,3 +100,7 @@ class Command(BaseCommand):
                 continue
 
         self.stdout.write(self.style.SUCCESS(f'\nİŞLEM TAMAM! TOPLAM {toplam_eklenen} YENİ FİLM EKLENDİ! 🚀'))
+
+
+    #python manage.py film_cek bu kod ile film çekiyoruz.
+    

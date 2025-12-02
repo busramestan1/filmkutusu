@@ -1,0 +1,639 @@
+<div class="row mb-5">
+
+    {% if slider_filmleri %}
+
+    <div id="filmCarousel" class="carousel slide mb-5 shadow-lg" data-bs-ride="carousel">
+
+
+
+        <div class="carousel-indicators">
+
+            {% for film in slider_filmleri %}
+
+            <button type="button" data-bs-target="#filmCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+                class="{% if forloop.first %}active{% endif %}" aria-current="true"></button>
+
+            {% endfor %}
+
+        </div>
+
+
+
+        <div class="carousel-inner">
+
+            {% for film in slider_filmleri %}
+
+            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="3000">
+
+
+
+                <div class="p-5 border border-3 border-dark position-relative bg-black" style="min-height: 450px;">
+
+                    <div class="row align-items-center">
+
+
+
+                        <div class="col-md-8 z-1">
+
+                            <span class="badge bg-danger mb-2">{{ film.tur }}</span>
+
+                            <h1 class="display-2 fw-bold text-white text-uppercase"
+                                style="letter-spacing: -2px; text-shadow: 2px 2px 10px #000;">
+
+                                {{ film.isim }}
+
+                            </h1>
+
+                            <p class="lead mt-3 text-light opacity-75" style="max-width: 90%; font-size: 1rem;">
+
+                                {{ film.konu|truncatewords:15 }} </p>
+
+
+
+                            <div class="mt-4 text-end pe-md-5">
+
+                                <a href="{% url 'detay' film.id %}"
+                                    class="btn btn-danger rounded-0 fw-bold px-4 py-2 shadow-lg">
+
+                                    İncele ➜
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-md-4 text-center mt-3 mt-md-0">
+
+                            <img src="{{ film.resim }}" alt="{{ film.isim }}" loading="lazy"
+                                class="img-fluid border border-3 border-danger shadow-red"
+                                style="max-height: 200px; object-fit: cover; transform: rotate(3deg);">
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="position-absolute top-0 start-0 w-100 h-100"
+                    style="background-image: url('{{ film.resim }}'); background-size: cover; filter: blur(20px) brightness(0.3); z-index: -1;">
+
+                </div>
+
+
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#filmCarousel" data-bs-slide="prev">
+
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+
+            <span class="visually-hidden">Önceki</span>
+
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#filmCarousel" data-bs-slide="next">
+
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+
+            <span class="visually-hidden">Sonraki</span>
+
+        </button>
+
+
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+/* --- VERİ HAVUZU --- */
+
+const modData = {
+
+'uzgun': [
+// EFSANELER & KLASİKLER
+{ t: "The Green Mile", d: "Mucizeler bazen en beklenmedik yerlerde gerçekleşir." },
+{ t: "Schindler's List", d: "Bir adamın vicdanı binlerce hayatı değiştirebilir." },
+{ t: "The Shawshank Redemption", d: "Umut iyi bir şeydir, belki de en iyi şey." },
+{ t: "Forrest Gump", d: "Hayat bir kutu çikolata gibidir." },
+{ t: "Life is Beautiful", d: "Savaşın ortasında bile gülümsemek bir direniştir." },
+{ t: "Titanic", d: "Aşk asla batmaz." },
+{ t: "The Notebook", d: "Gerçek aşkın hafızası silinmez." },
+{ t: "Hachiko: A Dog's Tale", d: "Sadakatin en saf ve dokunaklı hali." },
+{ t: "Good Will Hunting", d: "Kendi potansiyelini keşfetmek ve geçmişle yüzleşmek." },
+{ t: "Dead Poets Society", d: "O Captain! My Captain! Carpe Diem." },
+{ t: "The Pianist", d: "Müziğin iyileştirici gücü ve savaşın yıkımı." },
+{ t: "Cinema Paradiso", d: "Sinemaya adanmış bir ömür ve unutulmaz bir aşk." },
+{ t: "Requiem for a Dream", d: "Hayallerin kabusa dönüşmesi." },
+{ t: "Eternal Sunshine of the Spotless Mind", d: "Anıları silebilirsin ama hisleri asla." },
+{ t: "A Beautiful Mind", d: "Dahilik ve delilik arasındaki ince çizgi." },
+{ t: "Into the Wild", d: "Mutluluk sadece paylaşıldığında gerçektir." },
+{ t: "The Truman Show", d: "Ya tüm hayatın bir yalandan ibaretse?" },
+{ t: "Gran Torino", d: "Önyargıları kırmak ve kefaret." },
+{ t: "Million Dollar Baby", d: "Hayallerin peşinden gitmenin bedeli." },
+{ t: "Slumdog Millionaire", d: "Kader bazen yazılmıştır." },
+
+// MODERN DRAMALAR
+{ t: "The Pursuit of Happyness", d: "Asla pes etme, mutluluğu kovala." },
+{ t: "Interstellar", d: "Sevgi, zamanı ve mekanı aşan tek şeydir." },
+{ t: "Her", d: "Yalnızlık ve yapay zeka ile kurulan bağ." },
+{ t: "Moonlight", d: "Kimlik arayışı ve büyümenin sancıları." },
+{ t: "La La Land", d: "Hayaller ve aşk arasında yapılan seçimler." },
+{ t: "Manchester by the Sea", d: "Geçmişin hayaletleriyle yaşamak." },
+{ t: "Room", d: "Küçük bir odada yaratılan koca bir dünya." },
+{ t: "Three Billboards Outside Ebbing, Missouri", d: "Adalet arayışında sınır tanımamak." },
+{ t: "Parasite", d: "Sınıf farklarının trajikomik hikayesi." },
+{ t: "Joker", d: "Bir toplumun yarattığı kaosun portresi." },
+{ t: "Marriage Story", d: "Bir evliliğin dağılışı ve sevginin kalıntıları." },
+{ t: "The Father", d: "Hafızanın labirentlerinde kaybolmak." },
+{ t: "CODA", d: "Sessiz bir dünyada kendi sesini bulmak." },
+{ t: "Nomadland", d: "Modern göçebelik ve yolda bulunan huzur." },
+{ t: "Aftersun", d: "Anıların bulanık ve hüzünlü doğası." },
+{ t: "The Whale", d: "Kefaret ve yeniden bağ kurma çabası." },
+{ t: "Past Lives", d: "Kader, şans ve yarım kalan hikayeler." },
+{ t: "All Quiet on the Western Front", d: "Savaşın dehşeti ve insanlığın kaybı." },
+{ t: "The Banshees of Inisherin", d: "Dostluğun bitişi ve yalnızlık." },
+{ t: "Anatomy of a Fall", d: "Gerçeğin göreceliği ve bir evliliğin anatomisi." },
+
+// TÜRK SİNEMASI (DRAM)
+{ t: "Babam ve Oğlum", d: "Ona gitme... Bir ailenin yürek burkan hikayesi." },
+{ t: "Eşkıya", d: "35 yıl sonra gelen adalet ve aşk arayışı." },
+{ t: "Selvi Boylum Al Yazmalım", d: "Sevgi neydi? Sevgi emekti." },
+{ t: "Masumiyet", d: "Kaderin bir araya getirdiği kırık hayatlar." },
+{ t: "Kış Uykusu", d: "Aydınlanma ve vicdan muhasebesi." },
+{ t: "Bir Zamanlar Anadolu'da", d: "Bozkırın ortasında bitmeyen bir gece." },
+{ t: "Ahlat Ağacı", d: "Baba ve oğul arasındaki kuşak çatışması." },
+{ t: "Kelebeğin Rüyası", d: "Şairlerin kısa ve hüzünlü hayatı." },
+{ t: "Ayla", d: "Savaşın ortasında filizlenen baba-kız sevgisi." },
+{ t: "7. Koğuştaki Mucize", d: "Adalet arayan bir babanın masumiyeti." },
+{ t: "Mustang", d: "Özgürlük arayan beş kız kardeşin hikayesi." },
+{ t: "Duvara Karşı", d: "İki yaralı ruhun çarpışması." },
+{ t: "Uzak", d: "Şehirde kaybolmuş iki insanın yalnızlığı." },
+{ t: "Kader", d: "İmkansız bir aşkın peşinde sürüklenmek." },
+{ t: "Gönül Yarası", d: "Geçmişten gelen bir mektup ve aşk." },
+{ t: "Beynelmilel", d: "Darbe döneminde müzisyenlerin trajikomik hikayesi." },
+{ t: "Vizontele", d: "Teknoloji gelir ama dertler bitmez." },
+{ t: "Mutluluk", d: "Töre ve vicdan arasında bir yolculuk." },
+{ t: "İncir Reçeli", d: "Aşk bazen acıtır." },
+{ t: "Dedemin İnsanları", d: "Mübadele acısı ve aidiyet." },
+
+// DİĞER DUYGUSAL & ROMANTİK
+{ t: "About Time", d: "Zamanı geri alabilsen neyi değiştirirdin?" },
+{ t: "500 Days of Summer", d: "Bu bir aşk hikayesi değil, aşk hakkında bir hikaye." },
+{ t: "A Walk to Remember", d: "Aşk rüzgar gibidir, göremezsin ama hissedersiniz." },
+{ t: "Me Before You", d: "Bazı seçimler hayatı sonsuza dek değiştirir." },
+{ t: "The Fault in Our Stars", d: "Acı hissedilmeyi talep eder." },
+{ t: "Pride & Prejudice", d: "Gurur ve önyargının aşka engeli." },
+{ t: "Sense and Sensibility", d: "Mantık ve duygu arasındaki denge." },
+{ t: "Titanic", d: "Büyük bir gemi, daha büyük bir aşk." }, // Tekrar oldu, çıkarılabilir
+{ t: "Ghost", d: "Aşk ölümden daha güçlüdür." },
+{ t: "Pretty Woman", d: "Modern bir külkedisi masalı." },
+{ t: "Dirty Dancing", d: "Kimse bebeği bir köşeye atamaz." },
+{ t: "Casablanca", d: "Bütün gin barların içinde, benimkine girdi." },
+{ t: "Gone with the Wind", d: "Yarın başka bir gün." },
+{ t: "Amour", d: "Yaşlılık ve aşkın son sınavı." },
+{ t: "Blue Valentine", d: "Aşkın başlangıcı ve bitişi." },
+{ t: "Brokeback Mountain", d: "Yasak bir aşkın sessiz çığlığı." },
+{ t: "Call Me by Your Name", d: "İlk aşkın unutulmaz izi." },
+{ t: "Portrait of a Lady on Fire", d: "Bakışların ve sanatın dili." },
+{ t: "In the Mood for Love", d: "Söylenmemiş sözler ve gizli bakışlar." },
+{ t: "Lost in Translation", d: "Yabancı bir şehirde ruh eşini bulmak." },
+
+// BONUS AĞLATANLAR
+{ t: "Grave of the Fireflies", d: "Savaşın en masum kurbanları." },
+{ t: "Coco", d: "Unutulmamak üzerine renkli bir masal." },
+{ t: "Up", d: "Macera orada bir yerde!" },
+{ t: "Inside Out", d: "Duyguların karmaşık dünyası." },
+{ t: "Toy Story 3", d: "Büyümek ve veda etmek." },
+{ t: "The Lion King", d: "Yaşam döngüsü ve sorumluluk." },
+{ t: "Big Fish", d: "Gerçek ve masalın iç içe geçtiği bir hayat." },
+{ t: "The Curious Case of Benjamin Button", d: "Zamanı tersten yaşayan bir adam." },
+{ t: "Seven Pounds", d: "Kefaret için yedi hayat." },
+{ t: "I Am Sam", d: "Sevgi zekadan üstündür." },
+{ t: "Rain Man", d: "Otizm ve kardeşlik bağı." },
+{ t: "Awakenings", d: "Yıllar sonra uyanışın mucizesi." },
+{ t: "Patch Adams", d: "Kahkaha en iyi ilaçtır." },
+{ t: "Pay It Forward", d: "İyilik yap, iyilik bul." },
+{ t: "My Sister's Keeper", d: "Aile bağları ve zor kararlar." },
+{ t: "The Boy in the Striped Pyjamas", d: "Savaşın çocuk gözüyle trajedisi." },
+{ t: "Hotel Rwanda", d: "İnsanlığın bittiği yerde umut." },
+{ t: "12 Years a Slave", d: "Özgürlüğün bedeli." },
+{ t: "The Help", d: "Cesaret bazen sadece konuşmaktır." },
+{ t: "Hidden Figures", d: "Yıldızlara ulaşan görünmez kahramanlar." }
+],
+
+'enerjik': [
+// AKSİYON EFSANELERİ
+{ t: "John Wick", d: "Bir kalemle kaç kişi öldürülebilir? Saf aksiyon." },
+{ t: "Mad Max: Fury Road", d: "Çöl, benzin, ateş ve bitmeyen bir kovalamaca." },
+{ t: "The Dark Knight", d: "Kaosun ajanı Joker ve Batman'in savaşı." },
+{ t: "Inception", d: "Rüya içinde rüya... Aksiyon ve zeka oyunu." },
+{ t: "Gladiator", d: "Güç ve onur. Arenada hayatta kal!" },
+{ t: "Top Gun: Maverick", d: "Hız sınırlarını zorla. Kokpitte nefes alamayacaksın." },
+{ t: "Terminator 2: Judgment Day", d: "Hasta la vista, baby. Aksiyonun zirvesi." },
+{ t: "The Matrix", d: "Mavi hap mı, kırmızı hap mı? Gerçeğe uyan." },
+{ t: "Die Hard", d: "Yanlış zamanda yanlış yerde olan bir adamın hikayesi." },
+{ t: "Leon: The Professional", d: "Profesyonel bir tetikçi ve küçük bir kız." },
+{ t: "Heat", d: "Efsanevi bir soygun ve polis kovalamacası." },
+{ t: "V for Vendetta", d: "Fikirler kurşun geçirmezdir." },
+{ t: "Kill Bill: Vol 1", d: "İntikam soğuk yenen bir yemektir." },
+{ t: "Django Unchained", d: "Zincirlerini kır ve özgürlüğünü al." },
+{ t: "Braveheart", d: "Özgürlük için savaşanların destanı." },
+{ t: "Saving Private Ryan", d: "Savaşın en gerçekçi ve sarsıcı hali." },
+{ t: "Avatar", d: "Pandora'nın büyüleyici dünyasında bir savaş." },
+{ t: "300", d: "Bu Sparta! Görsel bir şölen." },
+{ t: "Speed", d: "Otobüs 50 milin altına düşerse patlar!" },
+{ t: "Face/Off", d: "Yüzler değişiyor, aksiyon bitmiyor." },
+
+// SÜPER KAHRAMANLAR & BİLİM KURGU
+{ t: "Avengers: Endgame", d: "Epik bir final. Kahramanlar toplanıyor." },
+{ t: "Spider-Man: No Way Home", d: "Çoklu evrenler çarpışıyor, nostalji rüzgarı!" },
+{ t: "Black Panther", d: "Wakanda sonsuza dek!" },
+{ t: "Guardians of the Galaxy", d: "Uzay boşluğunda dans ve aksiyon." },
+{ t: "Iron Man", d: "Bir efsanenin doğuşu. Ben Iron Man'im." },
+{ t: "Logan", d: "Wolverine'in son ve en kanlı yolculuğu." },
+{ t: "Deadpool", d: "Dördüncü duvarı yıkan, ağzı bozuk kahraman." },
+{ t: "Thor: Ragnarok", d: "Renkli, komik ve bol aksiyonlu bir kıyamet." },
+{ t: "Wonder Woman", d: "Güç, zarafet ve savaş." },
+{ t: "Dune", d: "Baharatı kontrol eden evreni kontrol eder." },
+{ t: "Edge of Tomorrow", d: "Yaşa, Öl, Tekrar Et." },
+{ t: "Blade Runner 2049", d: "Görsel bir başyapıt ve siberpunk aksiyon." },
+{ t: "Minority Report", d: "Suç işlenmeden önce suçluyu yakalamak." },
+{ t: "District 9", d: "Uzaylılar mülteci olursa ne olur?" },
+{ t: "Ready Player One", d: "Sanal gerçeklikte hazine avı." },
+{ t: "Star Wars: A New Hope", d: "Uzun zaman önce, çok uzak bir galakside..." },
+{ t: "Star Trek", d: "Uzayın derinliklerine cesur bir yolculuk." },
+{ t: "Jurassic Park", d: "Dinozorlar geri döndü, koşmaya başla!" },
+{ t: "King Kong", d: "Devasa bir goril ve New York şehri." },
+{ t: "Godzilla", d: "Canavarların kralı şehri yerle bir ediyor." },
+
+// MACERA & KOMEDİ
+{ t: "Pirates of the Caribbean", d: "Kaptan Jack Sparrow ile denizlere açıl." },
+{ t: "The Lord of the Rings: Fellowship of the Ring", d: "Orta Dünya'da epik bir yolculuk." },
+{ t: "Indiana Jones: Raiders of the Lost Ark", d: "Maceranın ve arkeolojinin kitabını yazan film." },
+{ t: "The Mummy", d: "Mısır çöllerinde uyanan bir lanet." },
+{ t: "National Treasure", d: "Bağımsızlık Bildirgesi'nin arkasında harita mı var?" },
+{ t: "Sherlock Holmes", d: "Aksiyon ve zeka bir arada." },
+{ t: "Mission: Impossible - Fallout", d: "İmkansız görevlerin en iyisi." },
+{ t: "Casino Royale", d: "James Bond'un en sert hali." },
+{ t: "Skyfall", d: "Eskiler bazen en iyisidir." },
+{ t: "Fast Five", d: "Rio sokaklarında kasa çalmak mı? Tam gaz." },
+{ t: "Ocean's Eleven", d: "Tarihin en şık ve zeki soygunu." },
+{ t: "Baby Driver", d: "Müzik ritmiyle senkronize araba kovalamacası." },
+{ t: "Snatch", d: "Hızlı konuşan çingeneler ve bir elmas." },
+{ t: "The Gentlemen", d: "Suç dünyasında şıklık ve entrika." },
+{ t: "Kingsman: The Secret Service", d: "Centilmen ajanlar ve kilise sahnesi." },
+{ t: "Rush Hour", d: "Doğu ve Batı'nın en komik birleşimi." },
+{ t: "Bad Boys", d: "Kötü çocuklar ne yapacaklarını bilir." },
+{ t: "Men in Black", d: "Uzaylıları bizden koruyan siyah giyimli adamlar." },
+{ t: "Jumanji: Welcome to the Jungle", d: "Oyunun içine hapsolmak hiç bu kadar eğlenceli olmamıştı." },
+{ t: "Free Guy", d: "Bir oyun karakteri olduğunu fark edersen ne yaparsın?" },
+
+// TÜRK SİNEMASI (KOMEDİ/AKSİYON)
+{ t: "G.O.R.A", d: "Bir cisim yaklaşıyor efendim! Uzayda Türk komedisi." },
+{ t: "A.R.O.G", d: "Taş devrinde bir Türk. Maymunla futbol maçı." },
+{ t: "Yahşi Batı", d: "Vahşi Batı'da iki Osmanlı ajanı." },
+{ t: "Organize İşler", d: "Araba hırsızlığı ve İstanbul'un arka sokakları." },
+{ t: "Vizontele", d: "Zeki Müren de bizi görecek mi?" },
+{ t: "Pardon", d: "Adalet sistemine trajikomik bir bakış." },
+{ t: "Ölümlü Dünya", d: "Nesilden nesile kiralık katil bir aile." },
+{ t: "Cinayet Süsü", d: "Beceriksiz dedektiflerin seri katil avı." },
+{ t: "Limonata", d: "İki kardeşin eğlenceli yol hikayesi." },
+{ t: "Neredesin Firuze", d: "Müzik piyasası ve hayaller. Renkli bir masal." },
+{ t: "Kibar Feyzo", d: "Faşo Ağa'ya selam vermeyen cesur yürek." },
+{ t: "Tosun Paşa", d: "Gerçek Tosun Paşa kim? Hamamda kargaşa." },
+{ t: "Süt Kardeşler", d: "Gulyabani geliyor! Efsane bir korku-komedi." },
+{ t: "Çöpçüler Kralı", d: "Aşk için her şeyi yapan bir çöpçü." },
+{ t: "Hababam Sınıfı", d: "Okuldan kaçmak, kopya çekmek ve dostluk." },
+{ t: "Şabanoğlu Şaban", d: "Dedektiflik oynayan sakarlar." },
+{ t: "Her Şey Çok Güzel Olacak", d: "En azından hayattayız, bu da bir şeydir." },
+{ t: "Hokkabaz", d: "Sihirbazlık mı, hokkabazlık mı?" },
+{ t: "Kabadayı", d: "Eski toprak bir kabadayı ve modern mafya." },
+{ t: "Av Mevsimi", d: "Avcı ne kadar hüzünlüyse, av o kadar zordur." }
+],
+
+'korku': [
+// MODERN KORKU EFSANELERİ
+{ t: "The Conjuring", d: "Işıkları açık bırakmak isteyeceksin. Gerçek hikaye." },
+{ t: "Insidious", d: "Astral seyahat hiç bu kadar korkunç olmamıştı." },
+{ t: "Sinister", d: "O kasetleri asla izlememeliydin." },
+{ t: "Hereditary", d: "Psikolojini zorlayacak, rahatsız edici bir deneyim." },
+{ t: "Midsommar", d: "Gündüz vakti korku olur mu? Evet, hem de çok fena." },
+{ t: "Get Out", d: "Hiçbir şey göründüğü gibi değil... Tüyler ürpertici." },
+{ t: "Us", d: "Kendinle karşılaşmak en büyük kabusun olabilir." },
+{ t: "A Quiet Place", d: "Ses çıkarırsan ölürsün. Sessizliğin gerilimi." },
+{ t: "It Follows", d: "Arkanı kollamayı bırakma, o sana doğru yürüyor." },
+{ t: "The Babadook", d: "Dolaptaki canavar bazen içimizdeki korkudur." },
+{ t: "Annabelle", d: "O oyuncak bebekle asla oynama." },
+{ t: "The Nun", d: "Manastırın karanlık koridorlarında dua et." },
+{ t: "Smile", d: "Gülümseme hiç bu kadar korkunç olmamıştı." },
+{ t: "Barbarian", d: "Evi kiraladın ama bodruma inme." },
+{ t: "Talk to Me", d: "O eldiveni tut ve ruhlarla konuş. Cesaretin var mı?" },
+{ t: "The Witch", d: "Ormanın derinliklerinde bir kötülük saklı." },
+{ t: "Don't Breathe", d: "Kör bir adamın evi sandığın kadar güvenli değil." },
+{ t: "Lights Out", d: "Işıkları kapatınca o beliriyor." },
+{ t: "Mama", d: "Bir anne sevgisi bazen ölümcüldür." },
+{ t: "The Autopsy of Jane Doe", d: "Morgda geçen klostrofobik bir gece." },
+
+// KLASİKLER & SLASHER
+{ t: "The Shining", d: "İşte Johnny! Bir otelde deliliğe yolculuk." },
+{ t: "Psycho", d: "O meşhur duş sahnesi... Klasiklerin babası." },
+{ t: "The Exorcist", d: "Tüm zamanların en korkunç filmi olarak bilinir." },
+{ t: "Alien", d: "Uzayda kimse çığlığını duyamaz." },
+{ t: "The Thing", d: "Kim dost, kim uzaylı? Buzlar arasında paranoya." },
+{ t: "Halloween", d: "Michael Myers bu gece eve dönüyor." },
+{ t: "A Nightmare on Elm Street", d: "Uyumamaya çalış. Freddy rüyalarına gelecek." },
+{ t: "Friday the 13th", d: "Jason göl kenarında kampçıları bekliyor." },
+{ t: "Scream", d: "Korku filmi kurallarını biliyor musun?" },
+{ t: "The Texas Chain Saw Massacre", d: "Saf dehşet ve motorlu testere sesi." },
+{ t: "Saw", d: "Oyun oynamak ister misin? Seçim senin." },
+{ t: "Final Destination", d: "Ölümün planını bozamazsın." },
+{ t: "Child's Play", d: "Chucky senin en iyi arkadaşın olmak istiyor." },
+{ t: "Poltergeist", d: "Televizyondan gelen seslere dikkat et." },
+{ t: "The Omen", d: "Şeytanın oğlu aramızda." },
+{ t: "Carrie", d: "Mezuniyet balosu kan gölüne dönecek." },
+{ t: "The Silence of the Lambs", d: "Kuzuların sessizliğini duyabiliyor musun?" },
+{ t: "Misery", d: "Bir yazar ve onun 'bir numaralı hayranı'." },
+{ t: "Jaws", d: "Denize girmeden önce iki kere düşüneceksin." },
+{ t: "Rosemary's Baby", d: "Komşularında bir gariplik var." },
+
+// ZOMBİ & CANAVAR
+{ t: "Train to Busan", d: "Zombilerle dolu bir trende hayatta kalma savaşı." },
+{ t: "World War Z", d: "Zombi kıyameti ve küresel bir kaçış." },
+{ t: "28 Days Later", d: "Uyandığında dünya bomboştu." },
+{ t: "Zombieland", d: "Zombilerle dolu dünyada hayatta kalma kuralları." },
+{ t: "I Am Legend", d: "Dünyadaki son insan sen olsan ne yapardın?" },
+{ t: "The Mist", d: "Sisin içinde ne saklanıyor? Sonu seni şok edecek." },
+{ t: "Cloverfield", d: "New York sokaklarında bir canavar." },
+{ t: "The Quiet Place Part II", d: "Sessizlik devam ediyor, tehlike büyüyor." },
+{ t: "Shaun of the Dead", d: "Zombi istilası mı? Pub'a gidip bira içelim." },
+{ t: "Dawn of the Dead", d: "Bir alışveriş merkezinde mahsur kalmak." },
+{ t: "Resident Evil", d: "Yapay zeka, virüs ve zombiler." },
+{ t: "Army of the Dead", d: "Zombilerle dolu Las Vegas'ta soygun." },
+{ t: "Rec", d: "Bir apartmanda karantina ve el kamerası dehşeti." },
+{ t: "The Descent", d: "Mağaranın derinliklerinde yalnız değilsiniz." },
+{ t: "Cabin in the Woods", d: "Bu sıradan bir orman kulübesi hikayesi değil." },
+{ t: "Evil Dead", d: "Ölülerin kitabı açıldı, kaçış yok." },
+{ t: "Drag Me to Hell", d: "Bir lanet hayatını cehenneme çevirebilir." },
+{ t: "It Chapter Two", d: "Palyaço geri döndü, yüzleşme vakti." },
+{ t: "Bird Box", d: "Gözlerini açarsan ölürsün." },
+{ t: "A Quiet Place: Day One", d: "Her şeyin başladığı gün. Gürültü ölüm demektir." },
+
+// TÜRK KORKU SİNEMASI
+{ t: "Dabbe: Zehr-i Cin", d: "Yerli korkunun zirvesi. Işıkları kapalı izleme." },
+{ t: "Siccin", d: "Büyü ve cin temalı serinin en korkuncu." },
+{ t: "Musallat", d: "Aşkına musallat olan bir varlık." },
+{ t: "Semum", d: "Bir bedene giren iblisin hikayesi." },
+{ t: "Üç Harfliler: Beddua", d: "Kabuslar gerçek oluyor." },
+{ t: "Baskin", d: "Polislerin girdiği ev aslında cehennemin kapısı." },
+{ t: "Dabbe: Cin Çarpması", d: "Found footage tarzında yerli dehşet." },
+{ t: "Sijjin", d: "Yasak bir aşk ve ölümcül bir büyü." },
+{ t: "Magi", d: "Hamile bir kadının etrafındaki karanlık sırlar." },
+{ t: "Gen", d: "Akıl hastanesinde işlenen gizemli cinayetler." },
+{ t: "Küçük Kıyamet", d: "Deprem korkusu mu, yoksa başka bir şey mi?" },
+{ t: "Okul", d: "Okulda geçen hayaletli bir gençlik korkusu." },
+{ t: "Ses", d: "Gaipten gelen sesler hayatını kabusa çevirir." },
+{ t: "Güzelliğin Portresi", d: "Eski bir köşk ve babadan kalan sırlar." },
+{ t: "Hüddam", d: "Yasak ilimler ve kontrol edilemeyen güçler." },
+{ t: "Alamet-i Kıyamet", d: "Kıyamet alametleri bir bir gerçekleşiyor." },
+{ t: "Azem: Cin Karası", d: "Anadolu'da geçen gerçek olduğu iddia edilen olaylar." },
+{ t: "El-Cin", d: "Cinlerin dünyasına bir bakış." },
+{ t: "Araf", d: "Arafta kalmış ruhların intikamı." },
+{ t: "Korku Okulu", d: "Öğrencilerin başı dertte." }
+]
+
+};
+
+
+const triviaData = [
+// --- YEŞİLÇAM & TÜRK SİNEMASI (KARIŞIK CEVAPLAR) ---
+{ q: "'Selvi Boylum Al Yazmalım' filmindeki efsane replik: 'Sevgi neydi?'", o: ["Sevgi dokunmaktı", "Sevgi
+fedakarlıktı", "Sevgi emekti"], a: 2 },
+{ q: "'Tosun Paşa' filminde kavga eden iki aile hangisidir?", o: ["Tellioğulları-Seferoğulları", "Canlar-Mallar",
+"Güneşler-Yıldızlar"], a: 0 },
+{ q: "'Çiçek Abbas' filminde Şener Şen'in canlandırdığı karakter?", o: ["Mülayim", "Ziya", "Şakir"], a: 2 },
+{ q: "'Kibar Feyzo' filminde 'Faşo Ağa'ya selam vermeyen' kimdir?", o: ["Feyzo", "Bilo", "Hüso"], a: 0 },
+{ q: "'G.O.R.A' filminde Arif'in düşmanı olan komutan kimdir?", o: ["Kubar", "Logar", "Garavel"], a: 1 },
+{ q: "'Vizontele' filminde 'Baba akü yok!' diyen karakter kimdir?", o: ["Emin", "Fikri", "Latif"], a: 0 },
+{ q: "'Süt Kardeşler' filmindeki canavarın adı nedir?", o: ["Gulyabani", "Öcü", "Hortlak"], a: 0 },
+{ q: "'Züğürt Ağa' filminde ağa en son ne satarak geçinir?", o: ["Hıyar", "Çiğ Köfte", "Domates"], a: 2 },
+{ q: "Münir Özkul ve Adile Naşit'in turşucu kavgası yaptığı film?", o: ["Neşeli Günler", "Gülen Gözler", "Bizim Aile"],
+a: 0 },
+{ q: "'Eşkıya' filminde Şener Şen'in canlandırdığı karakterin adı?", o: ["Cumali", "Baran", "Berfo"], a: 1 },
+{ q: "'Her Şey Çok Güzel Olacak' filminde Cem Yılmaz'ın abisi kimdir?", o: ["Mazhar Alanson", "Özkan Uğur", "Ozan
+Güven"], a: 0 },
+{ q: "'Pardon' filminde Ferhan Şensoy'un canlandırdığı karakter?", o: ["Muzo", "İbrahim", "Aydın"], a: 1 },
+{ q: "'Organize İşler' filminde Süpermen Samet'i kim oynadı?", o: ["Tolga Çevik", "Cem Yılmaz", "Yılmaz Erdoğan"], a: 0
+},
+{ q: "Kemal Sunal'ın 'Şaban Oğlu Şaban' filmindeki en yakın arkadaşı?", o: ["Güdük Necmi", "Ramazan", "Damat Ferit"], a:
+1 },
+{ q: "'Kapıcılar Kralı' filminde Seyit'in mesleği nedir?", o: ["Kapıcı", "Şoför", "Bakkal"], a: 0 },
+{ q: "'Çöpçüler Kralı' filminde Hacer'e aşık olan zabıta amiri?", o: ["Şakir", "Hüsnü", "Rüstem"], a: 0 },
+
+// --- HOLLYWOOD & DÜNYA SİNEMASI ---
+{ q: "'Baba' (The Godfather) filminde 'Reddedemeyeceği bir teklif' yapan kimdir?", o: ["Michael", "Vito Corleone",
+"Sonny"], a: 1 },
+{ q: "IMDb Top 250 listesinde 1. sırada hangi film vardır?", o: ["Esaretin Bedeli", "Baba", "Kara Şövalye"], a: 0 },
+{ q: "'Dövüş Kulübü'nün (Fight Club) birinci kuralı nedir?", o: ["Asla kaybetme", "Kulüpten bahsetme", "Her gün dövüş"],
+a: 1 },
+{ q: "'Forrest Gump' filminde Forrest neyi ile meşhurdur?", o: ["Yüzmesi", "Koşması", "Uçması"], a: 1 },
+{ q: "'Geleceğe Dönüş' filmindeki zaman makinesi hangi arabadır?", o: ["Ferrari", "DeLorean", "Mustang"], a: 1 },
+{ q: "Quentin Tarantino'nun yönettiği, Uma Thurman'ın oynadığı film?", o: ["Pulp Fiction", "Kill Bill", "Titanic"], a: 1
+},
+{ q: "'Inception' (Başlangıç) filminde rüyada olup olmadığını anlamak için ne kullanılır?", o: ["Totem (Topaç)", "Saat",
+"Ayna"], a: 0 },
+{ q: "'Truman Show' filminde Truman'ın hayatı aslında nedir?", o: ["Bir rüya", "Bir simülasyon", "Bir TV şovu"], a: 2 },
+{ q: "'Kuzuların Sessizliği' filmindeki yamyam doktorun adı nedir?", o: ["Jigsaw", "Hannibal Lecter", "Norman Bates"],
+a: 1 },
+{ q: "Oscar ödülü alan ilk Güney Kore filmi hangisidir?", o: ["Oldboy", "Parasite", "Train to Busan"], a: 1 },
+{ q: "'Yurttaş Kane' filmindeki 'Rosebud' neyin adıdır?", o: ["Gül", "Kızak", "Gemi"], a: 1 },
+{ q: "'Cinnet' (The Shining) filmindeki otelin adı nedir?", o: ["Overlook", "Continental", "Grand Budapest"], a: 0 },
+{ q: "'Olağan Şüpheliler' filmindeki gizemli suçlunun adı?", o: ["Tyler Durden", "John Doe", "Keyser Söze"], a: 2 },
+{ q: "Leonardo DiCaprio hangi filmle 'En İyi Erkek Oyuncu' Oscar'ını aldı?", o: ["The Revenant (Diriliş)", "Titanic",
+"Inception"], a: 0 },
+{ q: "'La La Land' filmi hangi türdedir?", o: ["Korku", "Müzikal", "Bilim Kurgu"], a: 1 },
+{ q: "'Schindler'in Listesi' filmi hangi renktedir?", o: ["Siyah-Beyaz", "Renkli", "Sepya"], a: 0 },
+{ q: "Alfred Hitchcock'un 'Kuşlar' filminde insanlara saldıran hayvanlar?", o: ["Kargalar", "Kuşlar", "Martılar"], a: 1
+},
+{ q: "'Er Ryan'ı Kurtarmak' filminde yüzbaşıyı kim oynadı?", o: ["Matt Damon", "Tom Hanks", "Vin Diesel"], a: 1 },
+{ q: "'Casablanca' filmindeki meşhur replik nedir?", o: ["Tekrar çal, Sam", "Merhaba dünya", "Geri döneceğim"], a: 0 },
+{ q: "'12 Kızgın Adam' filminin tamamı nerede geçer?", o: ["Mahkeme Salonu", "Jüri Odası", "Hapishane"], a: 1 },
+
+// --- SÜPER KAHRAMANLAR & FANTASTİK ---
+{ q: "'Kara Şövalye' filminde Batman'in baş düşmanı kimdir?", o: ["Bane", "Joker", "Penguin"], a: 1 },
+{ q: "Kaptan Amerika'nın kalkanı hangi metalden yapılmıştır?", o: ["Adamantium", "Vibranium", "Titanium"], a: 1 },
+{ q: "'Harry Potter' serisinde Harry'nin seçildiği bina hangisidir?", o: ["Gryffindor", "Slytherin", "Ravenclaw"], a: 0
+},
+{ q: "'Yıldız Savaşları'nda 'I am your father' diyen kimdir?", o: ["Yoda", "Darth Vader", "Luke"], a: 1 },
+{ q: "'Avengers'ta 'I am Iron Man' diyerek parmağını şıklatan kimdir?", o: ["Thor", "Tony Stark", "Hulk"], a: 1 },
+{ q: "'Spider-Man'in gerçek adı nedir?", o: ["Bruce Wayne", "Peter Parker", "Clark Kent"], a: 1 },
+{ q: "'Karayip Korsanları'ndaki efsanevi korsan kimdir?", o: ["Barbarossa", "Davy Jones", "Jack Sparrow"], a: 2 },
+{ q: "'Avatar' filmindeki mavi renkli halkın adı nedir?", o: ["Ewok", "Na'vi", "Klingon"], a: 1 },
+{ q: "Wolverine karakterinin iskeleti hangi metalden yapılmıştır?", o: ["Vibranium", "Çelik", "Adamantium"], a: 2 },
+{ q: "Thor'un çekicinin adı nedir?", o: ["Mjolnir", "Stormbreaker", "Aegis"], a: 0 },
+{ q: "Wonder Woman'ın memleketi neresidir?", o: ["Atlantis", "Themyscira", "Asgard"], a: 1 },
+{ q: "Joker'in sevgilisi olan karakter kimdir?", o: ["Poison Ivy", "Catwoman", "Harley Quinn"], a: 2 },
+
+// --- ANİMASYON ---
+{ q: "'Oyuncak Hikayesi'ndeki kovboyun adı nedir?", o: ["Buzz", "Woody", "Jessie"], a: 1 },
+{ q: "'Şrek' filminde eşeği seslendiren ünlü komedyen kimdir? (Orijinal)", o: ["Eddie Murphy", "Chris Rock", "Will
+Smith"], a: 0 },
+{ q: "'Buz Devri'nde meşe palamudunun peşinden koşan sincap?", o: ["Sid", "Scrat", "Manny"], a: 1 },
+{ q: "'Kayıp Balık Nemo' filminde Nemo'nun babasının adı?", o: ["Marlin", "Dory", "Bruce"], a: 0 },
+{ q: "'Aslan Kral' filminde Simba'nın babası kimdir?", o: ["Scar", "Mufasa", "Timon"], a: 1 },
+{ q: "'Oyuncak Hikayesi'nde Buzz Lightyear'ın ünlü sözü?", o: ["Sonsuzluğa ve ötesine!", "Uçuyorum!", "Ben bir
+oyuncağım!"], a: 0 },
+{ q: "'Yukarı Bak' (Up) filmindeki yaşlı adamın adı?", o: ["Russell", "Carl", "Kevin"], a: 1 },
+{ q: "'Çılgın Hırsız' filmindeki küçük sarı yardımcılar?", o: ["Minyonlar", "Limonlar", "Muzlar"], a: 0 },
+{ q: "'Kung Fu Panda'nın ana karakterinin adı?", o: ["Shifu", "Po", "Tigress"], a: 1 },
+
+// --- AKSİYON & MACERA ---
+{ q: "James Bond serisinin kod adı nedir?", o: ["001", "007", "999"], a: 1 },
+{ q: "Indiana Jones'un en büyük korkusu nedir?", o: ["Yılanlar", "Örümcekler", "Yükseklik"], a: 0 },
+{ q: "John Wick'in intikam alma sebebi nedir?", o: ["Evi", "Arabası ve Köpeği", "Parası"], a: 1 },
+{ q: "'Hızlı ve Öfkeli' serisinde 'Aile' kavramına önem veren karakter?", o: ["Brian", "Hobbs", "Dominic Toretto"], a: 2
+},
+{ q: "'Görevimiz Tehlike' serisinin başrol oyuncusu kimdir?", o: ["Tom Cruise", "Brad Pitt", "Keanu Reeves"], a: 0 },
+{ q: "'Yüzüklerin Efendisi'nde Frodo'ya eşlik eden bahçıvan?", o: ["Samwise Gamgee", "Merry", "Pippin"], a: 0 },
+{ q: "'Karate Kid' filmindeki ustanın adı nedir?", o: ["Bay Miyagi", "Jackie Chan", "Bruce Lee"], a: 0 },
+
+// --- BİLİM KURGU ---
+{ q: "'Başlangıç' (Inception) filminde rüya içinde rüya görmek için ne kullanılır?", o: ["Makine", "İlaç", "Totem"], a:
+1 }, // Cevap: İlaç/Makine (Genel olarak makineye bağlanırlar ama uyku ilacı şarttır)
+{ q: "'Yaratık' (Alien) filmindeki uzaylının kanı nasıldır?", o: ["Kırmızı", "Asitli Yeşil", "Mavi"], a: 1 },
+{ q: "'Blade Runner' filminde avlanan yapay insanlara ne denir?", o: ["Replicant", "Cyborg", "Android"], a: 0 },
+{ q: "'Mad Max: Fury Road' filmindeki kötü karakter?", o: ["Immortan Joe", "Bane", "Voldemort"], a: 0 },
+{ q: "'Wall-E' filmindeki robotun görevi nedir?", o: ["Savaşmak", "Çöp toplamak", "Yemek yapmak"], a: 1 }
+];
+
+
+const emojiData = [
+// --- MEVCUTLAR & YENİLER (KARIŞTIRILMIŞ CEVAPLAR) ---
+
+// TÜRK SİNEMASI & YEŞİLÇAM 🇹🇷
+{ q: "🛸🔥🇹🇷", o: ["A.R.O.G", "G.O.R.A", "Yahşi Batı"], a: 1 }, // Cevap: G.O.R.A (Ortada)
+{ q: "📺📡🏔️", o: ["Hükümet Kadın", "Neşeli Günler", "Vizontele"], a: 2 }, // Cevap: Vizontele (Sonda)
+{ q: "🤠🚜📸", o: ["Babam ve Oğlum", "Dedemin İnsanları", "Unutursam Fısılda"], a: 0 },
+{ q: "🛁🧖‍♂️🐊", o: ["Süt Kardeşler", "Tosun Paşa", "Şaban Oğlu Şaban"], a: 1 },
+{ q: "🚐❤️🌹", o: ["Çiçek Abbas", "Züğürt Ağa", "Selvi Boylum Al Yazmalım"], a: 2 }, // Cevap: Selvi Boylum (Sonda)
+{ q: "🔔🏫😂", o: ["Hababam Sınıfı", "Çılgın Dersane", "Sınav"], a: 0 },
+{ q: "🟧🐻😂", o: ["Celal ile Ceren", "Osman Pazarlama", "Recep İvedik"], a: 2 },
+{ q: "❄️🏨🛌", o: ["Ahlat Ağacı", "Kış Uykusu", "Bir Zamanlar Anadolu'da"], a: 1 },
+{ q: "🚗🔫🌉", o: ["Vizontele", "Organize İşler", "Ekşi Elmalar"], a: 1 },
+{ q: "🏙️🔫👴", o: ["Kabadayı", "Av Mevsimi", "Eşkıya"], a: 2 },
+{ q: "🇰🇷👧🇹🇷", o: ["Ayla", "Müslüm", "Naim"], a: 0 },
+{ q: "🎤🤕🥀", o: ["Dilberay", "Bergen", "Müslüm"], a: 1 },
+{ q: "🎒👮‍♂️👧", o: ["Babam ve Oğlum", "Ayla", "7. Koğuştaki Mucize"], a: 2 },
+{ q: "🍋👫🚗", o: ["Limonata", "Ölümlü Dünya", "Cinayet Süsü"], a: 0 },
+{ q: "👻🧟‍♂️🏚️", o: ["Gulyabani", "Süt Kardeşler", "Tosun Paşa"], a: 1 },
+
+// SÜPER KAHRAMANLAR 🦸‍♂️
+{ q: "🕷️🕸️🔴", o: ["Ant-Man", "Deadpool", "Spider-Man"], a: 2 },
+{ q: "🦇🤡🌃", o: ["Superman", "Batman", "Joker"], a: 1 },
+{ q: "🦸‍♂️💎🧤", o: ["Justice League", "X-Men", "Avengers: Infinity War"], a: 2 },
+{ q: "🙅🏾‍♂️🐆💜", o: ["Black Panther", "Blade", "Hancock"], a: 0 },
+{ q: "⚡🔨🧔", o: ["Thor", "Zeus", "Hercules"], a: 0 },
+{ q: "🦄⚔️🔴", o: ["Wolverine", "Deadpool", "Daredevil"], a: 1 },
+{ q: "🐺💅🩸", o: ["Logan", "X-Men", "Van Helsing"], a: 0 },
+{ q: "🦝🌳📼", o: ["Star Wars", "Guardians of the Galaxy", "E.T."], a: 1 },
+{ q: "👓🦸‍♂️💎", o: ["Shazam", "Clark Kent", "Superman"], a: 2 },
+{ q: "👸🛡️🗡️", o: ["Wonder Woman", "Xena", "Black Widow"], a: 0 },
+{ q: "🧜‍♂️🔱🌊", o: ["Aquaman", "Poseidon", "Percy Jackson"], a: 0 },
+{ q: "💍💚👽", o: ["Green Hornet", "Hulk", "Green Lantern"], a: 2 },
+{ q: "👿🚬🔫", o: ["Hellboy", "Ghost Rider", "Spawn"], a: 0 },
+{ q: "🧛‍♂️🕶️🗡️", o: ["Morbius", "Blade", "Dracula"], a: 1 },
+{ q: "🦸‍♂️🟢👧", o: ["Kick-Ass", "Superbad", "Scott Pilgrim"], a: 0 },
+
+// ANİMASYON 🦁
+{ q: "🦁👑🐗", o: ["Madagascar", "The Lion King", "Jungle Book"], a: 1 },
+{ q: "🐼👊🍜", o: ["Kung Fu Panda", "Ted", "Mulan"], a: 0 },
+{ q: "🐠🌊🐢", o: ["Shark Tale", "Finding Nemo", "Little Mermaid"], a: 1 },
+{ q: "🏠🎈👴", o: ["Up (Yukarı Bak)", "Balloon", "Sky High"], a: 0 },
+{ q: "🤠🚀🧸", o: ["Small Soldiers", "Lego Movie", "Toy Story"], a: 2 },
+{ q: "👹🏰🐴", o: ["Monsters Inc", "Shrek", "Trolls"], a: 1 },
+{ q: "🐀👨‍🍳🍲", o: ["Stuart Little", "Ratatouille", "Mouse Hunt"], a: 1 },
+{ q: "🚗⚡🏁", o: ["Cars", "Turbo", "Herbie"], a: 0 },
+{ q: "🧞‍♂️✨🐒", o: ["Sinbad", "Prince of Persia", "Aladdin"], a: 2 },
+{ q: "❄️☃️🦌", o: ["Ice Age", "Frozen", "Rise of Guardians"], a: 1 },
+{ q: "🍌👓💛", o: ["Minions", "Simpsons", "SpongeBob"], a: 0 },
+{ q: "🧣👃🌙", o: ["Megamind", "Incredibles", "Despicable Me"], a: 2 },
+{ q: "🐉🦷👦", o: ["How to Train Your Dragon", "Dragonheart", "Eragon"], a: 0 },
+{ q: "🎸💀🕯️", o: ["Coco", "Book of Life", "Soul"], a: 0 },
+{ q: "🤖🌱🚀", o: ["Robots", "Big Hero 6", "Wall-E"], a: 2 },
+{ q: "🐰🦊🚔", o: ["Sing", "Zootopia", "Secret Life of Pets"], a: 1 },
+{ q: "🐿️🌰❄️", o: ["Ice Age", "Over the Hedge", "Open Season"], a: 0 },
+{ q: "👻🚫🔫", o: ["Casper", "Ghostbusters", "Poltergeist"], a: 1 },
+
+// BİLİM KURGU & FANTASTİK 🚀
+{ q: "💍🌋👣", o: ["Hobbit", "Lord of the Rings", "Warcraft"], a: 1 },
+{ q: "💊🕶️🐇", o: ["The Matrix", "Alice in Wonderland", "Inception"], a: 0 },
+{ q: "🌀🏙️💤", o: ["Doctor Strange", "Tenet", "Inception"], a: 2 },
+{ q: "👽🚀🥚", o: ["Prometheus", "Alien", "Life"], a: 1 },
+{ q: "🦖🚙🌴", o: ["Godzilla", "Jurassic Park", "King Kong"], a: 1 },
+{ q: "🚗⚡🕰️", o: ["Time Machine", "Back to the Future", "Terminator"], a: 1 },
+{ q: "⚡👓🧙‍♂️", o: ["Percy Jackson", "Merlin", "Harry Potter"], a: 2 },
+{ q: "🦁🚪❄️", o: ["Narnia", "Golden Compass", "Bridge to Terabithia"], a: 0 },
+{ q: "🏴‍☠️🦜⚓", o: ["Peter Pan", "Hook", "Pirates of Caribbean"], a: 2 },
+{ q: "🤖🔫🕶️", o: ["Terminator", "Robocop", "Blade Runner"], a: 0 },
+{ q: "🦍🏙️✈️", o: ["King Kong", "Rampage", "Godzilla"], a: 0 },
+{ q: "👽👉👈🚲", o: ["Super 8", "E.T.", "Paul"], a: 1 },
+{ q: "🥔🚀🔴", o: ["The Martian", "Interstellar", "Gravity"], a: 0 },
+{ q: "🚀🌽🕰️", o: ["Signs", "Arrival", "Interstellar"], a: 2 },
+{ q: "💙🌲🚁", o: ["Avatar", "Pocahontas", "Dances with Wolves"], a: 0 },
+
+// KORKU & GERİLİM 👻
+{ q: "🤡🎈😱", o: ["Joker", "IT", "Circus"], a: 1 },
+{ q: "🚿🔪🩸", o: ["Scream", "Psycho", "American Psycho"], a: 1 },
+{ q: "📺📼📞", o: ["The Ring", "Poltergeist", "Scream"], a: 0 },
+{ q: "🚲🤡🩸", o: ["Saw", "IT", "Terrifier"], a: 0 },
+{ q: "🤫👂👾", o: ["A Quiet Place", "Bird Box", "Don't Breathe"], a: 0 },
+{ q: "👯‍♀️🚪🪓", o: ["Misery", "Doctor Sleep", "The Shining"], a: 2 },
+{ q: "😱📞🔪", o: ["Scream", "Scary Movie", "Halloween"], a: 0 },
+{ q: "🎃🔪😷", o: ["Friday the 13th", "Texas Chainsaw", "Halloween"], a: 2 },
+{ q: "😴🧤🔥", o: ["Nightmare on Elm Street", "Hellraiser", "Candyman"], a: 0 },
+{ q: "🥄☕😵", o: ["Us", "Get Out", "Nope"], a: 1 },
+{ q: "🧟‍♂️🚄🇰🇷", o: ["Train to Busan", "World War Z", "Seoul Station"], a: 0 },
+{ q: "📹🌲🧙‍♀️", o: ["Blair Witch Project", "The Witch", "Paranormal Activity"], a: 0 },
+
+// DRAM & ROMANTİK ❤️
+{ q: "🚢🧊💔", o: ["Ice Age", "Titanic", "Frozen"], a: 1 },
+{ q: "🏃🍫🍤", o: ["Forrest Gump", "Runner Runner", "Chocolat"], a: 0 },
+{ q: "📒❤️🌧️", o: ["A Walk to Remember", "The Notebook", "Dear John"], a: 1 },
+{ q: "🧛‍♂️🐺🍎", o: ["Twilight", "Underworld", "Vampire Diaries"], a: 0 },
+{ q: "🎹💃🕺", o: ["La La Land", "Chicago", "Grease"], a: 0 },
+{ q: "🏐🏝️🧔", o: ["Cast Away", "Robinson Crusoe", "Life of Pi"], a: 0 },
+{ q: "🐯🛶🌊", o: ["Life of Pi", "Jungle Book", "Tarzan"], a: 0 },
+{ q: "🐺💸💊", o: ["Wolf of Wall Street", "Big Short", "War Dogs"], a: 0 },
+{ q: "👴👶⏳", o: ["Big Fish", "Benjamin Button", "Boyhood"], a: 1 },
+{ q: "👠🛍️🏨", o: ["Pretty Woman", "Princess Diaries", "Devil Wears Prada"], a: 0 },
+
+// AKSİYON & DİĞERLERİ 💥
+{ q: "👊🧼🤫", o: ["Fight Club", "Snatch", "Pulp Fiction"], a: 0 },
+{ q: "🍔🔫🕺", o: ["Pulp Fiction", "Reservoir Dogs", "Goodfellas"], a: 0 },
+{ q: "🔫🍸0️⃣0️⃣7️⃣", o: ["James Bond", "Mission Impossible", "Kingsman"], a: 0 },
+{ q: "🧗‍♂️💣🎭", o: ["Mission Impossible", "Bourne Identity", "007"], a: 0 },
+{ q: "🚗💨🏁", o: ["Need for Speed", "Gran Turismo", "Fast & Furious"], a: 2 },
+{ q: "🍫🏭🎫", o: ["Wonka", "Candyman", "Charlie and Chocolate Factory"], a: 2 },
+{ q: "🍬🍭🍫", o: ["Wreck-It Ralph", "Candy", "Charlie and Chocolate Factory"], a: 2 },
+{ q: "🕵️‍♂️🎻🔍", o: ["Sherlock Holmes", "Enola Holmes", "Knives Out"], a: 0 },
+{ q: "📦🖐️🌧️", o: ["Se7en", "Zodiac", "Prisoners"], a: 0 },
+{ q: "💊🕶️🟢", o: ["Matrix", "John Wick", "Inception"], a: 0 },
+{ q: "👰💀💍", o: ["Corpse Bride", "Frankenweenie", "Monster House"], a: 0 },
+{ q: "✂️👐🏰", o: ["Edward Scissorhands", "Sweeney Todd", "Dark Shadows"], a: 0 },
+{ q: "👠🦁🌪️", o: ["Wizard of Oz", "Wicked", "Alice in Wonderland"], a: 0 }
+];
