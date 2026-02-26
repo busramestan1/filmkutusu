@@ -31,6 +31,16 @@
 * JavaScript (ES6+, DOM Manipülasyonu, Fetch API)
 
 ---
+📸 Ekran Görüntüleri
+<img width="1919" height="901" alt="Ekran görüntüsü 2026-02-26 135423" src="https://github.com/user-attachments/assets/094ac05e-2477-490f-8381-ba0c5940b40a" />
+<img width="1898" height="913" alt="Ekran görüntüsü 2026-02-26 135406" src="https://github.com/user-attachments/assets/1e81c853-cf83-47dc-95ff-0fae1f89ec85" />
+<img width="1917" height="905" alt="Ekran görüntüsü 2026-02-26 135353" src="https://github.com/user-attachments/assets/7e28cf69-f8cc-4a02-a245-692e265bc7db" />
+<img width="1887" height="790" alt="Ekran görüntüsü 2026-02-26 135341" src="https://github.com/user-attachments/assets/30b61136-6893-47e8-b170-ad062f074e60" />
+<img width="1358" height="908" alt="Ekran görüntüsü 2026-02-26 140140" src="https://github.com/user-attachments/assets/402d188f-08ea-4790-8d5e-b83591955995" />
+<img width="1364" height="903" alt="Ekran görüntüsü 2026-02-26 140128" src="https://github.com/user-attachments/assets/dd24994b-fff1-49af-97a5-21fcc3a1ed42" />
+<img width="1896" height="898" alt="Ekran görüntüsü 2026-02-26 140042" src="https://github.com/user-attachments/assets/f2b9dfee-a798-4b56-8137-9f04a5693378" />
+
+---
 
 ## 💻 Kurulum (Projeyi Kendi Bilgisayarında Çalıştırmak İçin)
 
@@ -65,16 +75,9 @@ python manage.py runserver
 Tarayıcınızda http://127.0.0.1:8000/ adresine giderek projeyi görüntüleyebilirsiniz.
 
 
-<img width="1919" height="901" alt="Ekran görüntüsü 2026-02-26 135423" src="https://github.com/user-attachments/assets/ba375ef2-626e-452f-aa4e-c536e36101e8" />
-<img width="1898" height="913" alt="Ekran görüntüsü 2026-02-26 135406" src="https://github.com/user-attachments/assets/38e14f0d-be7e-4b8a-90c1-7aec03b97cba" />
-<img width="1917" height="905" alt="Ekran görüntüsü 2026-02-26 135353" src="https://github.com/user-attachments/assets/fcd7c238-019d-48bd-a449-cc717bb315b0" />
-<img width="1887" height="790" alt="Ekran görüntüsü 2026-02-26 135341" src="https://github.com/user-attachments/assets/f4e3b6b0-78ed-491f-b6b8-570b985aecda" />
-
 
 👤 Geliştirici
 Büşra Mestan
-
-
 
 
 
